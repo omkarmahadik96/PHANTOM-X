@@ -1,0 +1,926 @@
+[
+  {
+    "category": "Reconnaissance & Information Gathering",
+    "file": "information_gathering.py",
+    "tools": [
+      {
+        "id": "recon_1",
+        "option": 1,
+        "name": "theHarvester",
+        "description": "E-mail, subdomain and host harvester from public sources.",
+        "commands": [
+          "theHarvester -h"
+        ],
+        "install_commands": [
+          "(git clone https://github.com/laramies/theHarvester.git && cd theHarvester && pip3 install --break-system-packages . )"
+        ],
+        "repo": "https://github.com/laramies/theHarvester"
+      },
+      {
+        "id": "recon_2",
+        "option": 2,
+        "name": "Amass",
+        "description": "In-depth DNS enumeration and network mapping framework.",
+        "commands": [
+          "amass -h"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y amass && python3 -c 'open(\"/usr/bin/amass\", \"w\").write(\"#!/bin/sh\\n/usr/lib/amass/amass \\\"$@\\\"\\n\")' )"
+        ],
+        "repo": "https://github.com/owasp-amass/amass"
+      },
+      {
+        "id": "recon_3",
+        "option": 3,
+        "name": "Subfinder",
+        "description": "Fast passive subdomain discovery tool.",
+        "commands": [
+          "subfinder -h"
+        ],
+        "install_commands": [
+          "(go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest )"
+        ],
+        "repo": "https://github.com/projectdiscovery/subfinder"
+      },
+      {
+        "id": "recon_4",
+        "option": 4,
+        "name": "Assetfinder",
+        "description": "Find subdomains related to a given domain.",
+        "commands": [
+          "assetfinder -h"
+        ],
+        "install_commands": [
+          "(go install github.com/tomnomnom/assetfinder@latest )"
+        ],
+        "repo": "https://github.com/tomnomnom/assetfinder"
+      },
+      {
+        "id": "recon_5",
+        "option": 5,
+        "name": "Recon-ng",
+        "description": "Web-based open source intelligence (OSINT) framework.",
+        "commands": [
+          "python3 recon-ng/recon-ng --help"
+        ],
+        "install_commands": [
+          "(git clone --depth=1 https://github.com/lanmaster53/recon-ng.git && cd recon-ng && pip3 install --break-system-packages -r REQUIREMENTS )"
+        ],
+        "repo": "https://github.com/lanmaster53/recon-ng"
+      },
+      {
+        "id": "recon_6",
+        "option": 6,
+        "name": "SpiderFoot",
+        "description": "OSINT automation tool for threat intelligence and footprints.",
+        "commands": [
+          "python3 spiderfoot/sf.py --help"
+        ],
+        "install_commands": [
+          "(git clone --depth=1 https://github.com/smicallef/spiderfoot.git && cd spiderfoot && pip3 install --break-system-packages cherrypy cherrypy-cors publicsuffixlist requests dnspython bs4 netaddr )"
+        ],
+        "repo": "https://github.com/smicallef/spiderfoot"
+      }
+    ]
+  },
+  {
+    "category": "🌐 Network Scanning",
+    "file": "network_scanning.py",
+    "tools": [
+      {
+        "id": "scan_1",
+        "option": 1,
+        "name": "Nmap",
+        "description": "Network exploration tool and security / port scanner.",
+        "commands": [
+          "nmap -h"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y nmap )"
+        ],
+        "repo": "https://github.com/nmap/nmap"
+      },
+      {
+        "id": "scan_2",
+        "option": 2,
+        "name": "Masscan",
+        "description": "TCP port scanner, spews packets asynchronously.",
+        "commands": [
+          "masscan --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y masscan )"
+        ],
+        "repo": "https://github.com/robertdavidgraham/masscan"
+      },
+      {
+        "id": "scan_3",
+        "option": 3,
+        "name": "RustScan",
+        "description": "Modern, ultra-fast port scanner built in Rust.",
+        "commands": [
+          "rustscan --help"
+        ],
+        "install_commands": [
+          "(wget -q https://github.com/RustScan/RustScan/releases/download/2.3.0/rustscan_2.3.0_amd64.deb && dpkg -i rustscan_2.3.0_amd64.deb && rm rustscan_2.3.0_amd64.deb )"
+        ],
+        "repo": "https://github.com/RustScan/RustScan"
+      },
+      {
+        "id": "scan_4",
+        "option": 4,
+        "name": "Naabu",
+        "description": "Fast and simple port scanner written in Go.",
+        "commands": [
+          "naabu -h"
+        ],
+        "install_commands": [
+          "(go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest )"
+        ],
+        "repo": "https://github.com/projectdiscovery/naabu"
+      }
+    ]
+  },
+  {
+    "category": "🕸️ Web Application Testing",
+    "file": "web_testing.py",
+    "tools": [
+      {
+        "id": "web_1",
+        "option": 1,
+        "name": "Nuclei",
+        "description": "Fast and customizable vulnerability scanner based on templates.",
+        "commands": [
+          "nuclei -h"
+        ],
+        "install_commands": [
+          "(go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest )"
+        ],
+        "repo": "https://github.com/projectdiscovery/nuclei"
+      },
+      {
+        "id": "web_2",
+        "option": 2,
+        "name": "Katana",
+        "description": "Next-generation web crawler and spidering framework.",
+        "commands": [
+          "katana -h"
+        ],
+        "install_commands": [
+          "(go install -v github.com/projectdiscovery/katana/cmd/katana@latest )"
+        ],
+        "repo": "https://github.com/projectdiscovery/katana"
+      },
+      {
+        "id": "web_3",
+        "option": 3,
+        "name": "httpx",
+        "description": "Fast and multi-purpose HTTP toolkit.",
+        "commands": [
+          "httpx -h"
+        ],
+        "install_commands": [
+          "(go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest )"
+        ],
+        "repo": "https://github.com/projectdiscovery/httpx"
+      },
+      {
+        "id": "web_4",
+        "option": 4,
+        "name": "ffuf",
+        "description": "Fast web fuzzer written in Go.",
+        "commands": [
+          "ffuf -h"
+        ],
+        "install_commands": [
+          "(go install github.com/ffuf/ffuf/v2@latest )"
+        ],
+        "repo": "https://github.com/ffuf/ffuf"
+      },
+      {
+        "id": "web_5",
+        "option": 5,
+        "name": "dirsearch",
+        "description": "Advanced web path fuzzer/scanner.",
+        "commands": [
+          "python3 dirsearch/dirsearch.py -h"
+        ],
+        "install_commands": [
+          "(git clone https://github.com/maurosoria/dirsearch.git && cd dirsearch && pip3 install -r requirements.txt )"
+        ],
+        "repo": "https://github.com/maurosoria/dirsearch"
+      },
+      {
+        "id": "web_6",
+        "option": 6,
+        "name": "XSStrike",
+        "description": "Advanced Cross Site Scripting (XSS) detection suite.",
+        "commands": [
+          "python3 XSStrike/xsstrike.py -h"
+        ],
+        "install_commands": [
+          "(git clone https://github.com/s0md3v/XSStrike.git && cd XSStrike && pip3 install -r requirements.txt )"
+        ],
+        "repo": "https://github.com/s0md3v/XSStrike"
+      },
+      {
+        "id": "web_7",
+        "option": 7,
+        "name": "sqlmap",
+        "description": "Automatic SQL injection and database takeover tool.",
+        "commands": [
+          "python3 sqlmap/sqlmap.py -h"
+        ],
+        "install_commands": [
+          "(git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap )"
+        ],
+        "repo": "https://github.com/sqlmapproject/sqlmap"
+      }
+    ]
+  },
+  {
+    "category": "🔍 Vulnerability Assessment",
+    "file": "vuln_assessment.py",
+    "tools": [
+      {
+        "id": "vuln_1",
+        "option": 1,
+        "name": "Nuclei Templates",
+        "description": "Community curated list of templates for the Nuclei scanner.",
+        "commands": [
+          "nuclei -ut"
+        ],
+        "install_commands": [
+          "(nuclei -update-templates )"
+        ],
+        "repo": "https://github.com/projectdiscovery/nuclei-templates"
+      },
+      {
+        "id": "vuln_2",
+        "option": 2,
+        "name": "Trivy",
+        "description": "Vulnerability scanner for containers, Kubernetes, and OS packages.",
+        "commands": [
+          "trivy --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get install -y apt-transport-https gnupg lsb-release && wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null && echo \"deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main\" | sudo tee /etc/apt/sources.list.d/trivy.list && sudo apt-get update && sudo apt-get install -y trivy )"
+        ],
+        "repo": "https://github.com/aquasecurity/trivy"
+      },
+      {
+        "id": "vuln_3",
+        "option": 3,
+        "name": "OpenVAS Community Docs",
+        "description": "Guides and docs for OpenVAS/Greenbone Vulnerability Manager.",
+        "commands": [
+          "echo 'OpenVAS is best run via docker-compose'"
+        ],
+        "install_commands": [
+          "(echo 'Visit Greenbone source build docs: https://greenbone.github.io/docs/latest/22.4/source-build/index.html' )"
+        ],
+        "repo": "https://github.com/greenbone/docs"
+      },
+      {
+        "id": "vuln_4",
+        "option": 4,
+        "name": "Nikto",
+        "description": "Web server vulnerability scanner.",
+        "commands": [
+          "nikto -h"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y nikto )"
+        ],
+        "repo": "https://github.com/sullo/nikto"
+      }
+    ]
+  },
+  {
+    "category": "🛡️ Password Auditing & Cracking (Authorized Testing Only)",
+    "file": "password_cracking.py",
+    "tools": [
+      {
+        "id": "pass_1",
+        "option": 1,
+        "name": "Hashcat",
+        "description": "Advanced CPU/GPU-based password recovery tool.",
+        "commands": [
+          "hashcat --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y hashcat )"
+        ],
+        "repo": "https://github.com/hashcat/hashcat"
+      },
+      {
+        "id": "pass_2",
+        "option": 2,
+        "name": "John The Ripper Jumbo",
+        "description": "Fast and customizable password cracker.",
+        "commands": [
+          "john"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y john )"
+        ],
+        "repo": "https://github.com/openwall/john"
+      },
+      {
+        "id": "pass_3",
+        "option": 3,
+        "name": "CeWL",
+        "description": "Custom Word List Generator crawls a URL for unique words.",
+        "commands": [
+          "cewl --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y cewl )"
+        ],
+        "repo": "https://github.com/digininja/CeWL"
+      }
+    ]
+  },
+  {
+    "category": "☁️ Cloud Security",
+    "file": "cloud_security.py",
+    "tools": [
+      {
+        "id": "cloud_1",
+        "option": 1,
+        "name": "ScoutSuite",
+        "description": "Multi-cloud security posture auditing tool.",
+        "commands": [
+          "scout --help"
+        ],
+        "install_commands": [
+          "(pip3 install --break-system-packages scoutsuite )"
+        ],
+        "repo": "https://github.com/nccgroup/ScoutSuite"
+      },
+      {
+        "id": "cloud_2",
+        "option": 2,
+        "name": "Prowler",
+        "description": "Security tool for AWS, Azure, and GCP assessments.",
+        "commands": [
+          "prowler --help"
+        ],
+        "install_commands": [
+          "(pip3 install --break-system-packages prowler )"
+        ],
+        "repo": "https://github.com/prowler-cloud/prowler"
+      },
+      {
+        "id": "cloud_3",
+        "option": 3,
+        "name": "CloudSplaining",
+        "description": "AWS IAM security assessment and vulnerability analysis tool.",
+        "commands": [
+          "cloudsplaining --help"
+        ],
+        "install_commands": [
+          "(pip3 install --break-system-packages cloudsplaining )"
+        ],
+        "repo": "https://github.com/salesforce/cloudsplaining"
+      }
+    ]
+  },
+  {
+    "category": "🐳 Container & Kubernetes Security",
+    "file": "container_security.py",
+    "tools": [
+      {
+        "id": "cont_1",
+        "option": 1,
+        "name": "kube-bench",
+        "description": "Checks whether Kubernetes is deployed securely (CIS benchmarks).",
+        "commands": [
+          "/root/hackingtool/kube-bench/kube-bench --help"
+        ],
+        "install_commands": [
+          "(mkdir -p kube-bench && wget -q https://github.com/aquasecurity/kube-bench/releases/download/v0.8.0/kube-bench_0.8.0_linux_amd64.tar.gz -O /tmp/kb.tar.gz && tar -xzf /tmp/kb.tar.gz -C kube-bench kube-bench && chmod +x kube-bench/kube-bench )"
+        ],
+        "repo": "https://github.com/aquasecurity/kube-bench"
+      },
+      {
+        "id": "cont_2",
+        "option": 2,
+        "name": "kube-hunter",
+        "description": "Hunts for security vulnerabilities in Kubernetes clusters.",
+        "commands": [
+          "python3 kube-hunter/kube-hunter.py --help"
+        ],
+        "install_commands": [
+          "(git clone --depth=1 https://github.com/aquasecurity/kube-hunter.git && cd kube-hunter && pip3 install --break-system-packages -r requirements.txt )"
+        ],
+        "repo": "https://github.com/aquasecurity/kube-hunter"
+      },
+      {
+        "id": "cont_3",
+        "option": 3,
+        "name": "Trivy (Container Scanner)",
+        "description": "Comprehensive container vulnerability scanner.",
+        "commands": [
+          "trivy --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get install -y apt-transport-https gnupg lsb-release && wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null && echo \"deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main\" | sudo tee /etc/apt/sources.list.d/trivy.list && sudo apt-get update && sudo apt-get install -y trivy )"
+        ],
+        "repo": "https://github.com/aquasecurity/trivy"
+      }
+    ]
+  },
+  {
+    "category": "🔵 SOC Analyst Essential Tools",
+    "file": "soc_tools.py",
+    "tools": [
+      {
+        "id": "soc_1",
+        "option": 1,
+        "name": "Wazuh",
+        "description": "EDR/SIEM threat detection, integrity monitoring, and compliance.",
+        "commands": [
+          "echo 'Wazuh manager installation script downloaded'"
+        ],
+        "install_commands": [
+          "(curl -sO https://packages.wazuh.com/4.x/wazuh-install.sh && sudo bash wazuh-install.sh --help )"
+        ],
+        "repo": "https://github.com/wazuh/wazuh"
+      },
+      {
+        "id": "soc_2",
+        "option": 2,
+        "name": "Security Onion",
+        "description": "Network security monitoring, log management, and analyst tools.",
+        "commands": [
+          "echo 'Visit Security Onion documentation at https://docs.securityonion.net/'"
+        ],
+        "install_commands": [
+          "(echo 'Requires dedicated deployment: https://github.com/SecurityOnionSolutions/securityonion' )"
+        ],
+        "repo": "https://github.com/SecurityOnionSolutions/securityonion"
+      },
+      {
+        "id": "soc_3",
+        "option": 3,
+        "name": "ELK Stack",
+        "description": "Elasticsearch, Logstash, and Kibana log analytics stack.",
+        "commands": [
+          "echo 'Elasticsearch, Logstash, Kibana log pipeline.'"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y elasticsearch logstash kibana )"
+        ],
+        "repo": "https://github.com/elastic/elasticsearch"
+      },
+      {
+        "id": "soc_4",
+        "option": 4,
+        "name": "Graylog",
+        "description": "Centralized log management and security analysis.",
+        "commands": [
+          "echo 'Graylog log search platform.'"
+        ],
+        "install_commands": [
+          "(echo 'Graylog requires MongoDB and OpenSearch. See: https://go2graylog.org/graylog-install' )"
+        ],
+        "repo": "https://github.com/Graylog2/graylog2-server"
+      },
+      {
+        "id": "soc_5",
+        "option": 5,
+        "name": "Zeek",
+        "description": "Network security monitor and traffic parser. Note: Requires kernel >=5.x. Install on host system.",
+        "commands": [
+          "echo 'Zeek requires kernel >=5.x. Use: apt-get install zeek on a full Linux host system.'"
+        ],
+        "install_commands": [
+          "(echo 'Zeek needs a full Linux host kernel. On Ubuntu/Debian: echo deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ / >> /etc/apt/sources.list && apt-get install zeek' )"
+        ],
+        "repo": "https://github.com/zeek/zeek"
+      },
+      {
+        "id": "soc_6",
+        "option": 6,
+        "name": "Suricata",
+        "description": "Real-time Network IDS, IPS, and NSM engine.",
+        "commands": [
+          "suricata --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y suricata )"
+        ],
+        "repo": "https://github.com/OISF/suricata"
+      },
+      {
+        "id": "soc_7",
+        "option": 7,
+        "name": "Snort3",
+        "description": "Open source network intrusion detection/prevention system.",
+        "commands": [
+          "echo 'Snort3 is not in Kali apt. Build from source: https://github.com/snort3/snort3'"
+        ],
+        "install_commands": [
+          "(apt-get install -y build-essential libpcap-dev libpcre3-dev libnet1-dev zlib1g-dev luajit hwloc libdnet-dev libdumbnet-dev bison flex liblzma-dev openssl libssl-dev pkg-config libhwloc-dev cmake cpputest libsqlite3-dev uuid-dev libcmocka-dev libnetfilter-queue-dev libmnl-dev autotools-dev libluajit-5.1-dev libunwind-dev && git clone --depth=1 https://github.com/snort3/snort3.git && cd snort3 && ./configure_cmake.sh --prefix=/usr/local && cd build && make -j$(nproc) && make install )"
+        ],
+        "repo": "https://github.com/snort3/snort3"
+      },
+      {
+        "id": "soc_8",
+        "option": 8,
+        "name": "Volatility 3",
+        "description": "Advanced memory forensics and analysis framework.",
+        "commands": [
+          "python3 volatility3/vol.py -h"
+        ],
+        "install_commands": [
+          "(git clone https://github.com/volatilityfoundation/volatility3.git && cd volatility3 && pip3 install -r requirements.txt )"
+        ],
+        "repo": "https://github.com/volatilityfoundation/volatility3"
+      },
+      {
+        "id": "soc_9",
+        "option": 9,
+        "name": "Autopsy",
+        "description": "Digital forensics GUI platform. CLI alternative: sleuthkit tools (mmls, fls, icat).",
+        "commands": [
+          "mmls --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y sleuthkit )"
+        ],
+        "repo": "https://github.com/sleuthkit/autopsy"
+      },
+      {
+        "id": "soc_10",
+        "option": 10,
+        "name": "Chainsaw",
+        "description": "Fast Windows event log analysis and threat hunting tool.",
+        "commands": [
+          "chainsaw -h"
+        ],
+        "install_commands": [
+          "(wget -q https://github.com/WithSecureLabs/chainsaw/releases/download/v2.8.0/chainsaw_x86_64-unknown-linux-musl.tar.gz -O /tmp/chainsaw.tar.gz && tar -xzf /tmp/chainsaw.tar.gz -C /usr/local/bin --strip-components=1 chainsaw/chainsaw && chmod +x /usr/local/bin/chainsaw )"
+        ],
+        "repo": "https://github.com/WithSecureLabs/chainsaw"
+      },
+      {
+        "id": "soc_11",
+        "option": 11,
+        "name": "Hayabusa",
+        "description": "Fast Windows event log forensic scanner.",
+        "commands": [
+          "hayabusa -h"
+        ],
+        "install_commands": [
+          "(wget -q https://github.com/Yamato-Security/hayabusa/releases/latest/download/hayabusa-linux-x64-musl.zip -O /tmp/hayabusa.zip && unzip -q /tmp/hayabusa.zip -d /tmp/hayabusa_dir && find /tmp/hayabusa_dir -name 'hayabusa*' -type f | head -1 | xargs -I{} mv {} /usr/local/bin/hayabusa && chmod +x /usr/local/bin/hayabusa )"
+        ],
+        "repo": "https://github.com/Yamato-Security/hayabusa"
+      },
+      {
+        "id": "soc_12",
+        "option": 12,
+        "name": "MISP",
+        "description": "Open Source Threat Information Sharing Platform.",
+        "commands": [
+          "echo 'MISP container/platform manager ready.'"
+        ],
+        "install_commands": [
+          "(echo 'MISP is best run via docker-compose: git clone https://github.com/MISP/misp-docker.git' )"
+        ],
+        "repo": "https://github.com/MISP/MISP"
+      },
+      {
+        "id": "soc_13",
+        "option": 13,
+        "name": "OpenCTI",
+        "description": "Open Cyber Threat Intelligence Platform.",
+        "commands": [
+          "echo 'OpenCTI portal.'"
+        ],
+        "install_commands": [
+          "(echo 'OpenCTI is recommended to run via docker-compose: https://github.com/OpenCTI-Platform/docker.git' )"
+        ],
+        "repo": "https://github.com/OpenCTI-Platform/opencti"
+      },
+      {
+        "id": "soc_14",
+        "option": 14,
+        "name": "YARA",
+        "description": "Pattern matching swiss knife for malware researchers.",
+        "commands": [
+          "yara --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y yara )"
+        ],
+        "repo": "https://github.com/VirusTotal/yara"
+      }
+    ]
+  },
+  {
+    "category": "🔴 Red Team / Adversary Emulation",
+    "file": "redteam_emulation.py",
+    "tools": [
+      {
+        "id": "red_1",
+        "option": 1,
+        "name": "MITRE Caldera",
+        "description": "Adversary emulation platform built on the MITRE ATT&CK framework.",
+        "commands": [
+          "python3 caldera/server.py --help"
+        ],
+        "install_commands": [
+          "(git clone --depth=1 https://github.com/mitre/caldera.git && cd caldera && pip3 install --break-system-packages -r requirements.txt )"
+        ],
+        "repo": "https://github.com/mitre/caldera"
+      },
+      {
+        "id": "red_2",
+        "option": 2,
+        "name": "Atomic Red Team",
+        "description": "Library of simple, portable tests mapped to MITRE ATT&CK.",
+        "commands": [
+          "echo 'Atomic Red Team repository cloned under atomic-red-team/'"
+        ],
+        "install_commands": [
+          "(git clone https://github.com/redcanaryco/atomic-red-team.git )"
+        ],
+        "repo": "https://github.com/redcanaryco/atomic-red-team"
+      },
+      {
+        "id": "red_3",
+        "option": 3,
+        "name": "Prelude Operator",
+        "description": "Desktop cybersecurity platform for autonomous security.",
+        "commands": [
+          "echo 'Operator platform client'"
+        ],
+        "install_commands": [
+          "(echo 'Prelude Operator is a desktop client application: https://www.prelude.org/' )"
+        ],
+        "repo": "https://github.com/preludeorg/operator"
+      }
+    ]
+  },
+  {
+    "category": "🐧 Red Hat / Linux Administration & Security",
+    "file": "linux_admin.py",
+    "tools": [
+      {
+        "id": "linux_1",
+        "option": 1,
+        "name": "Lynis",
+        "description": "Security auditing tool for Linux, macOS, and UNIX-based systems.",
+        "commands": [
+          "bash lynis/lynis show options"
+        ],
+        "install_commands": [
+          "(git clone --depth=1 https://github.com/CISOfy/lynis.git )"
+        ],
+        "repo": "https://github.com/CISOfy/lynis"
+      },
+      {
+        "id": "linux_2",
+        "option": 2,
+        "name": "OpenSCAP",
+        "description": "Security compliance and vulnerability scanner framework.",
+        "commands": [
+          "oscap --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y openscap-scanner )"
+        ],
+        "repo": "https://github.com/OpenSCAP/openscap"
+      },
+      {
+        "id": "linux_3",
+        "option": 3,
+        "name": "Falco",
+        "description": "Cloud-native runtime security. Requires kernel module. Use on bare-metal/VM host.",
+        "commands": [
+          "echo 'Falco requires kernel module. Install on a bare-metal host: curl -fsSL https://falco.org/repo/falcosecurity-packages.asc | gpg --dearmor -o /usr/share/keyrings/falco-archive-keyring.gpg'"
+        ],
+        "install_commands": [
+          "(curl -fsSL https://falco.org/repo/falcosecurity-packages.asc | gpg --dearmor -o /usr/share/keyrings/falco-archive-keyring.gpg && echo 'deb [signed-by=/usr/share/keyrings/falco-archive-keyring.gpg] https://download.falco.org/packages/deb stable main' | tee /etc/apt/sources.list.d/falcosecurity.list && apt-get update -q && apt-get install -y falco )"
+        ],
+        "repo": "https://github.com/falcosecurity/falco"
+      },
+      {
+        "id": "linux_4",
+        "option": 4,
+        "name": "Auditd Userspace",
+        "description": "Userspace tools and daemon for Linux Auditing System.",
+        "commands": [
+          "auditctl -h"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y auditd )"
+        ],
+        "repo": "https://github.com/linux-audit/audit-userspace"
+      }
+    ]
+  },
+  {
+    "category": "🎯 Top 15 Must Learn Tools",
+    "file": "fresher_top15.py",
+    "tools": [
+      {
+        "id": "top_1",
+        "option": 1,
+        "name": "Nmap",
+        "description": "Network exploration tool and security / port scanner.",
+        "commands": [
+          "nmap -h"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y nmap )"
+        ],
+        "repo": "https://github.com/nmap/nmap"
+      },
+      {
+        "id": "top_2",
+        "option": 2,
+        "name": "Wireshark",
+        "description": "The world's foremost network protocol analyzer (CLI mode tshark).",
+        "commands": [
+          "tshark -h"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y wireshark )"
+        ],
+        "repo": "https://github.com/wireshark/wireshark"
+      },
+      {
+        "id": "top_3",
+        "option": 3,
+        "name": "Burp Suite",
+        "description": "Leading web application security testing tool.",
+        "commands": [
+          "echo 'Burp Suite community community edition installer downloaded'"
+        ],
+        "install_commands": [
+          "(wget \"https://portswigger-cdn.net/burp/releases/download?product=community&version=2024.3.1.4&type=Linux\" -O burpsuite_community.sh && chmod +x burpsuite_community.sh )"
+        ],
+        "repo": "https://github.com/PortSwigger/burpsuite"
+      },
+      {
+        "id": "top_4",
+        "option": 4,
+        "name": "Nuclei",
+        "description": "Fast and customizable vulnerability scanner based on templates.",
+        "commands": [
+          "nuclei -h"
+        ],
+        "install_commands": [
+          "(go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest )"
+        ],
+        "repo": "https://github.com/projectdiscovery/nuclei"
+      },
+      {
+        "id": "top_5",
+        "option": 5,
+        "name": "Amass",
+        "description": "In-depth DNS enumeration and network mapping framework.",
+        "commands": [
+          "amass -h"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y amass && python3 -c 'open(\"/usr/bin/amass\", \"w\").write(\"#!/bin/sh\\n/usr/lib/amass/amass \\\"$@\\\"\\n\")' )"
+        ],
+        "repo": "https://github.com/owasp-amass/amass"
+      },
+      {
+        "id": "top_6",
+        "option": 6,
+        "name": "Subfinder",
+        "description": "Fast passive subdomain discovery tool.",
+        "commands": [
+          "subfinder -h"
+        ],
+        "install_commands": [
+          "(go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest )"
+        ],
+        "repo": "https://github.com/projectdiscovery/subfinder"
+      },
+      {
+        "id": "top_7",
+        "option": 7,
+        "name": "ffuf",
+        "description": "Fast web fuzzer written in Go.",
+        "commands": [
+          "ffuf -h"
+        ],
+        "install_commands": [
+          "(go install github.com/ffuf/ffuf/v2@latest )"
+        ],
+        "repo": "https://github.com/ffuf/ffuf"
+      },
+      {
+        "id": "top_8",
+        "option": 8,
+        "name": "sqlmap",
+        "description": "Automatic SQL injection and database takeover tool.",
+        "commands": [
+          "python3 sqlmap/sqlmap.py -h"
+        ],
+        "install_commands": [
+          "(git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap )"
+        ],
+        "repo": "https://github.com/sqlmapproject/sqlmap"
+      },
+      {
+        "id": "top_9",
+        "option": 9,
+        "name": "Wazuh",
+        "description": "EDR/SIEM threat detection, integrity monitoring, and compliance.",
+        "commands": [
+          "echo 'Wazuh manager installation script downloaded'"
+        ],
+        "install_commands": [
+          "(curl -sO https://packages.wazuh.com/4.x/wazuh-install.sh && sudo bash wazuh-install.sh --help )"
+        ],
+        "repo": "https://github.com/wazuh/wazuh"
+      },
+      {
+        "id": "top_10",
+        "option": 10,
+        "name": "Suricata",
+        "description": "Real-time Network IDS, IPS, and NSM engine.",
+        "commands": [
+          "suricata --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y suricata )"
+        ],
+        "repo": "https://github.com/OISF/suricata"
+      },
+      {
+        "id": "top_11",
+        "option": 11,
+        "name": "Zeek",
+        "description": "Network security monitor and traffic parser.",
+        "commands": [
+          "echo 'Zeek requires kernel >=5.x. Use: apt-get install zeek on a full Linux host system.'"
+        ],
+        "install_commands": [
+          "(echo 'Zeek needs a full Linux host kernel. On Ubuntu/Debian: echo deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ / >> /etc/apt/sources.list && apt-get install zeek' )"
+        ],
+        "repo": "https://github.com/zeek/zeek"
+      },
+      {
+        "id": "top_12",
+        "option": 12,
+        "name": "Volatility3",
+        "description": "Advanced memory forensics and analysis framework.",
+        "commands": [
+          "python3 volatility3/vol.py -h"
+        ],
+        "install_commands": [
+          "(git clone https://github.com/volatilityfoundation/volatility3.git && cd volatility3 && pip3 install -r requirements.txt )"
+        ],
+        "repo": "https://github.com/volatilityfoundation/volatility3"
+      },
+      {
+        "id": "top_13",
+        "option": 13,
+        "name": "Autopsy",
+        "description": "Digital forensics platform. CLI alternative: sleuthkit (mmls, fls, icat, fsstat).",
+        "commands": [
+          "mmls --help"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y sleuthkit )"
+        ],
+        "repo": "https://github.com/sleuthkit/autopsy"
+      },
+      {
+        "id": "top_14",
+        "option": 14,
+        "name": "Lynis",
+        "description": "Security auditing tool for Linux, macOS, and UNIX-based systems.",
+        "commands": [
+          "bash lynis/lynis show options"
+        ],
+        "install_commands": [
+          "(git clone --depth=1 https://github.com/CISOfy/lynis.git )"
+        ],
+        "repo": "https://github.com/CISOfy/lynis"
+      },
+      {
+        "id": "top_15",
+        "option": 15,
+        "name": "Falco",
+        "description": "Cloud-native runtime security. Requires kernel module on bare-metal/VM host.",
+        "commands": [
+          "echo 'Falco requires kernel module. Run on bare-metal Linux host for full functionality.'"
+        ],
+        "install_commands": [
+          "(curl -fsSL https://falco.org/repo/falcosecurity-packages.asc | gpg --dearmor -o /usr/share/keyrings/falco-archive-keyring.gpg && echo 'deb [signed-by=/usr/share/keyrings/falco-archive-keyring.gpg] https://download.falco.org/packages/deb stable main' | tee /etc/apt/sources.list.d/falcosecurity.list && apt-get update -q && apt-get install -y falco )"
+        ],
+        "repo": "https://github.com/falcosecurity/falco"
+      }
+    ]
+  }
+]

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHANTOM-X — Security Intelligence Platform</title>
+    <meta name="description" content="PHANTOM-X: Elite security intelligence platform with 66+ professional penetration testing tools.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <!-- XTerm.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-kali">
+
+    <!-- Background layers -->
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
+
+    <div class="app-root">
+
+        <!-- ══════════════ SIDEBAR ══════════════ -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Logo -->
+            <div class="sidebar-logo">
+                <div class="logo-icon-img-wrap danger-glow">
+                    <img src="phantom_x_logo.png" alt="PHANTOM-X Logo" class="logo-icon-img" style="border-radius:12px;" />
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">PHANTOM<span class="logo-accent">-X</span></span>
+                    <span class="logo-sub">Security Intelligence Platform</span>
+                </div>
+            </div>
+
+            <!-- Stats row -->
+            <div class="sidebar-stats">
+                <div class="stat-pill">
+                    <i class="fa-solid fa-database"></i>
+                    <span id="stat-total">—</span>
+                    <span class="stat-label">Total</span>
+                </div>
+                <div class="stat-pill installed">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span id="stat-cloned">0</span>
+                    <span class="stat-label">Installed</span>
+                </div>
+            </div>
+
+            <!-- Connection status -->
+            <div class="connection-row" id="connection-row">
+                <span class="conn-dot disconnected" id="conn-dot"></span>
+                <span class="conn-label" id="conn-label">Connecting...</span>
+            </div>
+
+            <!-- Category Nav -->
+            <div class="sidebar-nav-label">CATEGORIES</div>
+            <nav class="sidebar-nav" id="category-list">
+                <!-- injected by JS -->
+            </nav>
+
+            <!-- Bottom theme + view -->
+            <div class="sidebar-footer">
+                <div class="footer-row">
+                    <i class="fa-solid fa-palette"></i>
+                    <select id="theme-selector" class="theme-sel">
+                        <option value="theme-kali">Kali Purple</option>
+                        <option value="theme-matrix">Matrix Green</option>
+                        <option value="theme-blood">Blood Red</option>
+                        <option value="theme-ice">Arctic Ice</option>
+                        <option value="theme-slate">Slate Dark</option>
+                    </select>
+                </div>
+                <div class="footer-row view-row">
+                    <button class="view-btn active" id="btn-split" title="Split View"><i class="fa-solid fa-table-columns"></i></button>
+                    <button class="view-btn" id="btn-term-only" title="Terminal Only"><i class="fa-solid fa-terminal"></i></button>
+                    <button class="view-btn" id="btn-tools-only" title="Tools Only"><i class="fa-solid fa-th-large"></i></button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ══════════════ MAIN CONTENT ══════════════ -->
+        <div class="main-area" id="main-area">
+
+            <!-- ── TOP STATUS BAR ── -->
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" id="btn-sidebar-toggle" title="Toggle Sidebar">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="process-status" id="process-status">
+                        <span class="ps-dot idle" id="ps-dot"></span>
+                        <span class="ps-text" id="ps-text">SYSTEM IDLE</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button class="topbar-action-btn danger" id="btn-kill-process" disabled title="Stop Running Process">
+                        <i class="fa-solid fa-circle-stop"></i> STOP
+                    </button>
+                    <button class="topbar-action-btn" id="btn-run-menu" title="Run CLI Main Menu">
+                        <i class="fa-solid fa-play"></i> CLI MENU
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── SPLIT WORKSPACE ── -->
+            <div class="workspace view-split" id="workspace">
+
+                <!-- LEFT: Terminal Panel -->
+                <section class="term-panel" id="term-panel">
+                    <div class="panel-titlebar">
+                        <div class="titlebar-dots">
+                            <span class="dot-red"></span>
+                            <span class="dot-yellow"></span>
+                            <span class="dot-green"></span>
+                        </div>
+                        <div class="panel-tab active">
+                            <i class="fa-solid fa-terminal"></i>
+                            <span id="terminal-tab-title">root@PHANTOM-X: ~/hackingtool</span>
+                        </div>
+                        <div class="panel-actions">
+                            <button class="paction-btn" id="btn-reset-dir" title="Reset to home dir"><i class="fa-solid fa-house"></i></button>
+                            <button class="paction-btn" id="btn-clear-term" title="Clear terminal"><i class="fa-solid fa-eraser"></i></button>
+                        </div>
+                    </div>
+                    <!-- XTerm container -->
+                    <div class="xterm-container" id="xterm-container">
+                        <div id="terminal"></div>
+                    </div>
+                </section>
+
+                <!-- RIGHT: Tools Explorer -->
+                <section class="tools-panel" id="tools-panel">
+                    <!-- Search header -->
+                    <div class="tools-search-bar">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="search-input" class="search-input" placeholder="Search 95+ tools by name, tag, or category..." autocomplete="off" />
+                        <span class="search-clear" id="search-clear" style="display:none"><i class="fa-solid fa-xmark"></i></span>
+                    </div>
+
+                    <!-- Category chips (horizontal scroll) -->
+                    <div class="cat-chips-row" id="cat-chips-row">
+                        <!-- injected by JS -->
+                    </div>
+
+                    <!-- Panel header -->
+                    <div class="tools-panel-header">
+                        <h2 class="tools-cat-title" id="tools-cat-title">All Tools</h2>
+                        <span class="tools-count" id="tools-count">Loading...</span>
+                    </div>
+
+                    <!-- Tool Cards Grid -->
+                    <div class="tools-grid" id="tools-grid">
+                        <!-- injected by JS -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ TOOL DETAIL MODAL ══════════════ -->
+    <div class="modal-overlay" id="detail-modal">
+        <div class="modal-card">
+            <button class="modal-close" id="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="modal-top">
+                <div class="modal-icon-wrap" id="modal-icon-wrap">
+                    <i class="fa-solid fa-terminal"></i>
+                </div>
+                <div class="modal-title-wrap">
+                    <span class="modal-cat-label" id="modal-cat-label">CATEGORY</span>
+                    <h2 class="modal-tool-title" id="modal-tool-name">Tool Name</h2>
+                </div>
+                <div class="modal-install-badge" id="modal-install-badge">
+                    <span class="badge checking" id="modal-status-badge">Checking...</span>
+                </div>
+            </div>
+
+            <p class="modal-description" id="modal-description">Description</p>
+
+            <div class="modal-meta">
+                <div class="meta-row">
+                    <span class="meta-key"><i class="fa-solid fa-fingerprint"></i> Tool ID</span>
+                    <span class="meta-val" id="modal-tool-id">—</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-key"><i class="fa-brands fa-github"></i> Repository</span>
+                    <a href="#" target="_blank" class="meta-val link" id="modal-repo-link">—</a>
+                </div>
+            </div>
+
+            <div class="modal-cmd-preview">
+                <div class="cmd-label"><i class="fa-solid fa-code"></i> Execution Command</div>
+                <pre class="cmd-pre"><code id="modal-cmd-code">—</code></pre>
+            </div>
+
+            <div class="modal-actions">
+                <button class="maction-btn secondary" id="btn-open-repo" disabled>
+                    <i class="fa-brands fa-github"></i> View Source
+                </button>
+                <button class="maction-btn primary" id="btn-install-tool" disabled>
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Install
+                </button>
+                <button class="maction-btn danger" id="btn-run-tool" disabled>
+                    <i class="fa-solid fa-bolt"></i> Execute
+                </button>
+                <button class="maction-btn" id="btn-uninstall-tool" style="display: none; background: rgba(255, 0, 85, 0.1); border: 1px solid #ff0055; color: #ff0055;">
+                    <i class="fa-solid fa-trash-can"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
