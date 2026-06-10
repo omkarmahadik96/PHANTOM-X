@@ -338,6 +338,20 @@
           "(sudo apt-get update && sudo apt-get install -y cewl )"
         ],
         "repo": "https://github.com/digininja/CeWL"
+      },
+      {
+        "id": "pass_4",
+        "option": 4,
+        "name": "Hydra",
+        "description": "Very fast network logon cracker which supports many different services.",
+        "commands": [
+          "hydra -h"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y hydra )"
+        ],
+        "repo": "https://github.com/vanhauser-thc/thc-hydra",
+        "tags": ["bruteforce", "credentials", "active-directory"]
       }
     ]
   },

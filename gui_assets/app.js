@@ -202,6 +202,39 @@ const GUI_SCHEMAS = {
         ],
         commandBuilder: (vals) => `ruby CeWL/cewl.rb "${vals.target}"`
     },
+    "pass_4": {
+        name: "Hydra",
+        inputs: [
+            { id: "target", label: "Target Host / IP", type: "text", placeholder: "192.168.1.100", required: true, suggestion: "192.168.1.100", help: "The IP address or domain name of the network target (e.g. 192.168.1.100)." },
+            { id: "service", label: "Service / Protocol", type: "select", options: [
+                { value: "ssh", label: "SSH" },
+                { value: "ftp", label: "FTP" },
+                { value: "telnet", label: "Telnet" },
+                { value: "mysql", label: "MySQL" },
+                { value: "rdp", label: "RDP" },
+                { value: "smb", label: "SMB" },
+                { value: "http-get", label: "HTTP-GET" },
+                { value: "http-post-form", label: "HTTP-POST-Form" }
+            ], default: "ssh", help: "Select the network service/protocol to crack logins on." },
+            { id: "username", label: "Username / List", type: "text", placeholder: "admin or userlist.txt", required: true, default: "admin", suggestion: "admin", help: "Enter a single username (e.g. admin) or path to a username list (e.g. /usr/share/wordlists/metasploit/namelist.txt)." },
+            { id: "is_userlist", label: "Is Username a List file?", type: "select", options: [
+                { value: "No", label: "No (Single Username)" },
+                { value: "Yes", label: "Yes (Username List file)" }
+            ], default: "No", help: "Select Yes if the Username input is a path to a list of usernames, otherwise select No." },
+            { id: "password", label: "Password / Wordlist", type: "text", placeholder: "/usr/share/wordlists/rockyou.txt", required: true, default: "/usr/share/wordlists/rockyou.txt", suggestion: "/usr/share/wordlists/rockyou.txt", help: "Enter a single password or path to a wordlist file (e.g. /usr/share/wordlists/rockyou.txt)." },
+            { id: "is_passlist", label: "Is Password a List file?", type: "select", options: [
+                { value: "Yes", label: "Yes (Password Wordlist file)" },
+                { value: "No", label: "No (Single Password)" }
+            ], default: "Yes", help: "Select Yes if the Password input is a path to a wordlist of passwords, otherwise select No." },
+            { id: "extra", label: "Extra Parameters (Optional)", type: "text", placeholder: "-t 4 -V", help: "Additional flags for hydra (e.g., -t 4 to set concurrent connections, -V for verbose info)." }
+        ],
+        commandBuilder: (vals) => {
+            let uFlag = vals.is_userlist === "Yes" ? "-L" : "-l";
+            let pFlag = vals.is_passlist === "No" ? "-p" : "-P";
+            let service = vals.service || "ssh";
+            return `hydra ${uFlag} "${vals.username || 'admin'}" ${pFlag} "${vals.password || '/usr/share/wordlists/rockyou.txt'}" ${vals.extra || ''} "${vals.target}" ${service}`;
+        }
+    },
     "cloud_1": {
         name: "ScoutSuite",
         inputs: [
