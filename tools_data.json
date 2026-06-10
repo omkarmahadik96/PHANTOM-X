@@ -661,6 +661,62 @@
           "(echo 'Prelude Operator is a desktop client application: https://www.prelude.org/' )"
         ],
         "repo": "https://github.com/preludeorg/operator"
+      },
+      {
+        "id": "red_4",
+        "option": 4,
+        "name": "Metasploit Framework",
+        "description": "The world's most used penetration testing framework for exploit validation.",
+        "commands": [
+          "msfconsole -h"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y metasploit-framework )"
+        ],
+        "repo": "https://github.com/rapid7/metasploit-framework",
+        "tags": ["c2", "scanner", "active-directory"]
+      },
+      {
+        "id": "red_5",
+        "option": 5,
+        "name": "NetExec",
+        "description": "Network and Active Directory security auditing tool (CrackMapExec successor).",
+        "commands": [
+          "nxc -h"
+        ],
+        "install_commands": [
+          "(pip3 install --break-system-packages netexec )"
+        ],
+        "repo": "https://github.com/Pennyw0rth/NetExec",
+        "tags": ["active-directory", "bruteforce", "credentials"]
+      },
+      {
+        "id": "red_6",
+        "option": 6,
+        "name": "Impacket Suite",
+        "description": "Collection of Python classes for working with network protocols (SMB, Kerberos, etc.).",
+        "commands": [
+          "python3 -c 'import impacket; print(impacket.__file__)'"
+        ],
+        "install_commands": [
+          "(pip3 install --break-system-packages impacket )"
+        ],
+        "repo": "https://github.com/fortra/impacket",
+        "tags": ["active-directory", "credentials"]
+      },
+      {
+        "id": "red_7",
+        "option": 7,
+        "name": "Evil-WinRM",
+        "description": "The ultimate Windows Remote Management (WinRM) shell for penetration testing.",
+        "commands": [
+          "evil-winrm --help"
+        ],
+        "install_commands": [
+          "(sudo gem install evil-winrm )"
+        ],
+        "repo": "https://github.com/Hackplayers/evil-winrm",
+        "tags": ["active-directory", "c2"]
       }
     ]
   },
