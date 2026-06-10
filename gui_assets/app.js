@@ -205,7 +205,7 @@ const GUI_SCHEMAS = {
     "pass_4": {
         name: "Hydra",
         inputs: [
-            { id: "target", label: "Target Host / IP", type: "text", placeholder: "192.168.1.100", required: true, suggestion: "192.168.1.100", help: "The IP address or domain name of the network target (e.g. 192.168.1.100)." },
+            { id: "target", label: "Target Host / IP", type: "text", placeholder: "192.168.1.100", required: true, default: "192.168.1.100", suggestion: "192.168.1.100", help: "The IP address or domain name of the network target (e.g. 192.168.1.100)." },
             { id: "service", label: "Service / Protocol", type: "select", options: [
                 { value: "ssh", label: "SSH" },
                 { value: "ftp", label: "FTP" },
@@ -361,7 +361,7 @@ const GUI_SCHEMAS = {
                 { value: "mssql", label: "MSSQL" },
                 { value: "ftp", label: "FTP" }
             ], default: "smb", help: "The network protocol to use for scanning and auditing." },
-            { id: "target", label: "Target IP / Range", type: "text", placeholder: "192.168.1.0/24", required: true, suggestion: "192.168.1.1", help: "The target IP address, domain name, or range to scan (e.g. 192.168.1.0/24)." },
+            { id: "target", label: "Target IP / Range", type: "text", placeholder: "192.168.1.0/24", required: true, default: "192.168.1.100", suggestion: "192.168.1.1", help: "The target IP address, domain name, or range to scan (e.g. 192.168.1.0/24)." },
             { id: "user", label: "Username (Optional)", type: "text", placeholder: "administrator", suggestion: "administrator", help: "Username for authentication checks." },
             { id: "password", label: "Password / Hash (Optional)", type: "text", placeholder: "admin123", suggestion: "admin123", help: "Plaintext password or NTLM hash (e.g., admin123 or LM:NT hash)." },
             { id: "extra", label: "Extra Arguments (Optional)", type: "text", placeholder: "--shares", suggestion: "--shares", help: "Other NetExec arguments, like '--shares' to check share permissions, or '-M spider_plus'." }
@@ -383,7 +383,7 @@ const GUI_SCHEMAS = {
                 { value: "impacket-samrdump", label: "samrdump (Dump SAM users)" },
                 { value: "impacket-mssqlclient", label: "mssqlclient (MSSQL database client)" }
             ], default: "impacket-secretsdump", help: "The specific Impacket utility to launch." },
-            { id: "target", label: "Target / Connection String", type: "text", placeholder: "domain/user:password@target_ip", required: true, suggestion: "administrator:password@192.168.1.100", help: "Connection details. Format: [domain/][user][:password]@target_ip (e.g., administrator:pass@192.168.1.100 or WORKGROUP/user@192.168.1.100)." },
+            { id: "target", label: "Target / Connection String", type: "text", placeholder: "domain/user:password@target_ip", required: true, default: "administrator:admin123@192.168.1.100", suggestion: "administrator:password@192.168.1.100", help: "Connection details. Format: [domain/][user][:password]@target_ip (e.g., administrator:pass@192.168.1.100 or WORKGROUP/user@192.168.1.100)." },
             { id: "extra", label: "Extra Parameters (Optional)", type: "text", placeholder: "-just-dc", suggestion: "-just-dc", help: "Additional parameters for the selected tool (e.g., '-just-dc' for secretsdump, or '-hashes LM:NT')." }
         ],
         commandBuilder: (vals) => `${vals.tool || 'impacket-secretsdump'} "${vals.target}" ${vals.extra || ''}`
@@ -391,9 +391,9 @@ const GUI_SCHEMAS = {
     "red_7": {
         name: "Evil-WinRM",
         inputs: [
-            { id: "target", label: "Target IP / Host", type: "text", placeholder: "192.168.1.100", required: true, suggestion: "192.168.1.100", help: "The IP address or domain name of the remote Windows target." },
-            { id: "user", label: "Username", type: "text", placeholder: "administrator", required: true, suggestion: "administrator", help: "Username to authenticate with (e.g., administrator)." },
-            { id: "password", label: "Password or NT Hash", type: "text", placeholder: "admin123 or hash", required: true, suggestion: "admin123", help: "Password or NT hash for the user (can use hashes option with hash)." },
+            { id: "target", label: "Target IP / Host", type: "text", placeholder: "192.168.1.100", required: true, default: "192.168.1.100", suggestion: "192.168.1.100", help: "The IP address or domain name of the remote Windows target." },
+            { id: "user", label: "Username", type: "text", placeholder: "administrator", required: true, default: "administrator", suggestion: "administrator", help: "Username to authenticate with (e.g., administrator)." },
+            { id: "password", label: "Password or NT Hash", type: "text", placeholder: "admin123 or hash", required: true, default: "admin123", suggestion: "admin123", help: "Password or NT hash for the user (can use hashes option with hash)." },
             { id: "use_ssl", label: "Use SSL / Encryption", type: "select", options: [
                 { value: "No", label: "No (Port 5985)" },
                 { value: "Yes", label: "Yes (Port 5986)" }
