@@ -5,7 +5,7 @@
 # 🌌 PHANTOM-X
 ### **Premium Cyber Auditing & Penetration Testing Command Center**
 
-PHANTOM-X is a state-of-the-art security platform designed for researchers, penetration testers, and security analysts. It bundles **66 industry-standard auditing tools** across **11 categories** into a unified workspace, served via a beautiful glassmorphic Web Console and an interactive dynamic Command Line Interface (CLI).
+PHANTOM-X is a state-of-the-art security platform designed for researchers, penetration testers, and security analysts. It bundles **71 industry-standard auditing tools** across **11 categories** into a unified workspace, served via a beautiful glassmorphic Web Console and an interactive dynamic Command Line Interface (CLI).
 
 ---
 
@@ -29,13 +29,13 @@ PHANTOM-X is a state-of-the-art security platform designed for researchers, pene
     *   Clicking an installed tool immediately loads its parameter inputs in the GUI workspace.
     *   Clicking an uninstalled tool triggers a simplified **Download & Install** confirmation modal showing live installation logs. Once finished, it auto-loads into the form.
 *   **💻 Dynamic CLI Command Center**: Interactive text terminal with search query support (`/`), tag filters (`t`), and instant recommendation system (`r`).
-*   **66 Audited & Verified Tools**: 100% of the tools in the catalog are tested, patched, and confirmed working (0 dead tools).
+*   **71 Audited & Verified Tools**: 100% of the tools in the catalog are tested, patched, and confirmed working (0 dead tools).
 *   **Safe Docker Containerization**: Runs in a sandboxed Kali Linux Docker environment to keep your host machine clean and safe.
 *   **Isolated Multi-Session Engine**: Separate terminal sessions, PTY wrappers, and command executors per browser tab or client.
 
 ---
 
-## 📂 Catalog (11 Categories & 66 Tools)
+## 📂 Catalog (11 Categories & 71 Tools)
 
 | Reconnaissance & Info Gathering | Network Scanning | Web Application Testing | Vulnerability Assessment |
 |---|---|---|---|
@@ -43,11 +43,11 @@ PHANTOM-X is a state-of-the-art security platform designed for researchers, pene
 
 | Password Auditing | Cloud Security | Container & K8s Security | SOC Analyst Essentials |
 |---|---|---|---|
-| • Hashcat<br>• John The Ripper Jumbo<br>• CeWL | • ScoutSuite<br>• Prowler<br>• CloudSplaining | • kube-bench<br>• kube-hunter<br>• Trivy (Container) | • Wazuh<br>• Security Onion<br>• ELK Stack<br>• Graylog<br>• Zeek<br>• Suricata<br>• Snort3<br>• Volatility 3<br>• Autopsy<br>• Chainsaw<br>• Hayabusa<br>• MISP<br>• OpenCTI<br>• YARA |
+| • Hashcat<br>• John The Ripper Jumbo<br>• CeWL<br>• Hydra | • ScoutSuite<br>• Prowler<br>• CloudSplaining | • kube-bench<br>• kube-hunter<br>• Trivy (Container) | • Wazuh<br>• Security Onion<br>• ELK Stack<br>• Graylog<br>• Zeek<br>• Suricata<br>• Snort3<br>• Volatility 3<br>• Autopsy<br>• Chainsaw<br>• Hayabusa<br>• MISP<br>• OpenCTI<br>• YARA |
 
 | Red Team & Emulation | Linux Admin & Security | Top 15 Must Learn Tools |
 |---|---|---|
-| • MITRE Caldera<br>• Atomic Red Team<br>• Prelude Operator | • Lynis<br>• OpenSCAP<br>• Falco<br>• Auditd Userspace | • Nmap, Wireshark, Burp Suite, Nuclei, Amass, Subfinder, ffuf, sqlmap, Wazuh, Suricata, Zeek, Volatility3, Autopsy, Lynis, Falco |
+| • MITRE Caldera<br>• Atomic Red Team<br>• Prelude Operator<br>• Metasploit Framework<br>• NetExec<br>• Impacket Suite<br>• Evil-WinRM | • Lynis<br>• OpenSCAP<br>• Falco<br>• Auditd Userspace | • Nmap, Wireshark, Burp Suite, Nuclei, Amass, Subfinder, ffuf, sqlmap, Wazuh, Suricata, Zeek, Volatility3, Autopsy, Lynis, Falco |
 
 ---
 
