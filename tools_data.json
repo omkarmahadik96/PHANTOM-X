@@ -992,5 +992,25 @@
         "repo": "https://github.com/falcosecurity/falco"
       }
     ]
+  },
+  {
+    "category": "📱 Mobile Debugging & Auditing",
+    "file": "mobile_auditing.py",
+    "tools": [
+      {
+        "id": "mobile_1",
+        "option": 1,
+        "name": "ADB (Android Debug Bridge)",
+        "description": "Standard command-line developer utility to communicate, command, and audit Android devices.",
+        "commands": [
+          "adb --version"
+        ],
+        "install_commands": [
+          "(sudo apt-get update && sudo apt-get install -y adb )"
+        ],
+        "repo": "https://developer.android.com/studio/releases/platform-tools",
+        "tags": ["mobile", "recon"]
+      }
+    ]
   }
 ]

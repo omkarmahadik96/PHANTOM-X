@@ -404,6 +404,31 @@ const GUI_SCHEMAS = {
             let ssl = vals.use_ssl === "Yes" ? "-S" : "";
             return `evil-winrm -i "${vals.target}" -u "${vals.user}" -p "${vals.password}" ${ssl} ${vals.extra || ''}`;
         }
+    },
+    "mobile_1": {
+        name: "ADB (Android Debug Bridge)",
+        inputs: [
+            { id: "target", label: "Connection Target (Wi-Fi IP:Port)", type: "text", placeholder: "10.101.244.123:5555", default: "10.101.244.123:5555", help: "The IP address and port of your Android phone (e.g., 10.101.244.123:5555). Leave blank if connected via USB." },
+            { id: "command", label: "ADB Command", type: "select", options: [
+                { value: "devices", label: "devices (List connected devices)" },
+                { value: "connect", label: "connect (Connect to target IP via Wi-Fi)" },
+                { value: "disconnect", label: "disconnect (Disconnect target IP)" },
+                { value: "shell getprop", label: "shell getprop (Fetch system properties)" },
+                { value: "shell pm list packages", label: "shell pm list packages (List installed apps)" }
+            ], default: "devices", help: "Select the ADB operation to run against the device." },
+            { id: "extra", label: "Extra Parameters / Shell Command (Optional)", type: "text", placeholder: "shell pm path com.android.chrome", help: "Additional parameters or direct shell commands to run on the device." }
+        ],
+        commandBuilder: (vals) => {
+            let cmd = vals.command || "devices";
+            if (cmd === "connect") {
+                return `adb connect ${vals.target || '10.101.244.123:5555'}`;
+            } else if (cmd === "disconnect") {
+                return `adb disconnect ${vals.target || ''}`;
+            } else {
+                let targetFlag = vals.target ? `-s ${vals.target}` : '';
+                return `adb ${targetFlag} ${cmd} ${vals.extra || ''}`;
+            }
+        }
     }
 };
 
