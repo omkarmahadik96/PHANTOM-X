@@ -130,7 +130,7 @@ def is_tool_installed(tool):
     parts = clean_cmd_str.split()
     if parts:
         executable = parts[0].strip()
-        if executable not in ("python", "python3", "python2", "bash", "sh", "php", "git", "pip", "pip3"):
+        if executable not in ("python", "python3", "python2", "bash", "sh", "php", "git", "pip", "pip3", "echo", "cd", "sudo", "clear", "cat", "sleep", "exit", "."):
             # Check if it exists on PATH
             if shutil.which(executable):
                 return True
@@ -170,7 +170,7 @@ def get_custom_env():
     env["PYTHONDONTWRITEBYTECODE"] = "1"
     env["TERM"] = "xterm-256color"
     # PHANTOM-X PS1 prompt
-    env["PS1"] = "\\[\\e[1;34m\\]\u250c\u2500\u2500(\\[\\e[1;35m\\]root\\[\\e[1;34m\\]\u2561\\[\\e[1;31m\\]PHANTOM-X\\[\\e[1;34m\\])-[\\[\\e[1;32m\\]\\w\\[\\e[1;34m\\]]\\n\u2514\u2500# \\[\\e[0m\\]"
+    env["PS1"] = "\\[\\e[1;34m\\]\u250c\u2500\u2500(\\[\\e[1;35m\\]root\\[\\e[1;34m\\]\u327f\\[\\e[1;31m\\]PHANTOM-X\\[\\e[1;34m\\])-[\\[\\e[1;32m\\]\\w\\[\\e[1;34m\\]]\\n\u2514\u2500# \\[\\e[0m\\]"
     return env
 
 def clean_command(cmd):
@@ -268,7 +268,8 @@ def init_session(sid):
             'master_fd': None,
             'active_install_tool_id': None,
             'cols': 80,
-            'rows': 24
+            'rows': 24,
+            'gui_process': None
         }
 
 def delete_session(sid):
@@ -278,6 +279,9 @@ def delete_session(sid):
             proc = sess.get('process')
             if proc:
                 kill_process_tree(proc)
+            gui_proc = sess.get('gui_process')
+            if gui_proc:
+                kill_process_tree(gui_proc)
 
 def cleanup_broken_install(sid):
     sess = get_session(sid)
@@ -526,7 +530,7 @@ def start_interactive_shell(sid):
     # Always write/refresh .bashrc_temp and remove clear to preserve process outputs
     with open(temp_rc, "w", encoding="utf-8") as f:
         f.write('export PATH="$PATH:/root/go/bin:/root/.local/bin"\n')
-        f.write('export PS1="\\[\\e[1;34m\\]\u250c\u2500\u2500(\\[\\e[1;35m\\]root\\[\\e[1;34m\\]\u2561\\[\\e[1;31m\\]PHANTOM-X\\[\\e[1;34m\\])-[\\[\\e[1;32m\\]\\w\\[\\e[1;34m\\]]\\n\u2514\u2500# \\[\\e[0m\\]"\n')
+        f.write('export PS1="\\[\\e[1;34m\\]\u250c\u2500\u2500(\\[\\e[1;35m\\]root\\[\\e[1;34m\\]\u327f\\[\\e[1;31m\\]PHANTOM-X\\[\\e[1;34m\\])-[\\[\\e[1;32m\\]\\w\\[\\e[1;34m\\]]\\n\u2514\u2500# \\[\\e[0m\\]"\n')
         f.write('alias ls="ls --color=auto"\n')
         f.write('alias dir="dir --color=auto"\n')
         f.write('alias grep="grep --color=auto"\n')
@@ -570,13 +574,7 @@ def status_updater_loop():
 # ══════════════════════════════════════════════════════════════
 @app.route('/')
 def index():
-    ua = request.headers.get('User-Agent', '')
-    if 'Electron' in ua:
-        return app.send_static_file('desktop.html')
-    elif 'VenomOS-Mobile' in ua:
-        return app.send_static_file('mobile.html')
-    else:
-        return app.send_static_file('index.html')
+    return app.send_static_file('index.html')
 
 @app.route('/api/tools')
 def api_tools():
@@ -1000,6 +998,81 @@ def handle_kill():
             except Exception as e:
                 print(f"[KILL ERROR] {e}")
                 kill_process_tree(proc)
+
+@socketio.on('run_gui_tool')
+def handle_run_gui_tool(data):
+    sid = request.sid
+    tool_id = data.get('tool_id')
+    tool_name = data.get('tool_name', 'Tool')
+    cmd_str = data.get('command')
+    
+    if not cmd_str:
+        emit('gui_tool_output', {'data': '[ERROR] No command specified.\n'}, room=sid)
+        return
+        
+    sess = get_session(sid)
+    if not sess:
+        return
+        
+    old_gui_proc = sess.get('gui_process')
+    if old_gui_proc and old_gui_proc.poll() is None:
+        kill_process_tree(old_gui_proc)
+        time.sleep(0.2)
+        
+    env = get_custom_env()
+    print(f"[GUI TOOL] Running: {cmd_str} for session {sid}")
+    
+    try:
+        proc = subprocess.Popen(
+            [get_bash_path(), "-c", cmd_str],
+            cwd=BASE_DIR,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            env=env,
+            preexec_fn=None if os.name == 'nt' else os.setsid
+        )
+    except Exception as e:
+        emit('gui_tool_output', {'data': f'[ERROR] Failed to start process: {e}\n'}, room=sid)
+        return
+        
+    with sessions_lock:
+        if sid in client_sessions:
+            client_sessions[sid]['gui_process'] = proc
+            
+    def read_gui_stdout():
+        try:
+            for raw in iter(proc.stdout.readline, b''):
+                try:
+                    line = raw.decode('utf-8', errors='replace')
+                except Exception:
+                    line = raw.decode('cp1252', errors='replace')
+                socketio.emit('gui_tool_output', {'data': line}, room=sid)
+        except Exception as e:
+            print(f"[GUI STDOUT READ ERROR] for session {sid}: {e}")
+        finally:
+            proc.wait()
+            code = proc.poll()
+            socketio.emit('gui_tool_exit', {'code': code, 'tool_id': tool_id}, room=sid)
+            with sessions_lock:
+                if sid in client_sessions and client_sessions[sid].get('gui_process') is proc:
+                    client_sessions[sid]['gui_process'] = None
+                    
+    threading.Thread(target=read_gui_stdout, daemon=True).start()
+
+@socketio.on('kill_gui_tool')
+def handle_kill_gui_tool(data):
+    sid = request.sid
+    sess = get_session(sid)
+    if sess:
+        proc = sess.get('gui_process')
+        if proc and proc.poll() is None:
+            print(f"[KILL GUI] Killing GUI process tree for session {sid}")
+            kill_process_tree(proc)
+            with sessions_lock:
+                sess['gui_process'] = None
+            emit('gui_tool_output', {'data': '\n\n[SYSTEM] Execution interrupted by user.\n'}, room=sid)
+            emit('gui_tool_exit', {'code': -1}, room=sid)
 
 @socketio.on('reset_directory')
 def handle_reset_directory():

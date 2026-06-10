@@ -6,6 +6,10 @@
     <title>PHANTOM-X — Security Intelligence Platform</title>
     <meta name="description" content="PHANTOM-X: Elite security intelligence platform with 66+ professional penetration testing tools.">
 
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="phantom_x_logo.png" type="image/png" />
+    <link rel="icon" href="phantom_x_logo.png" type="image/png" />
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,11 +80,9 @@
                 <div class="footer-row">
                     <i class="fa-solid fa-palette"></i>
                     <select id="theme-selector" class="theme-sel">
-                        <option value="theme-kali">Kali Purple</option>
-                        <option value="theme-matrix">Matrix Green</option>
-                        <option value="theme-blood">Blood Red</option>
-                        <option value="theme-ice">Arctic Ice</option>
-                        <option value="theme-slate">Slate Dark</option>
+                        <option value="theme-kali">Phantom-X</option>
+                        <option value="theme-cyberglow">Cyber-Glow</option>
+                        <option value="theme-venomred">Venom-Red</option>
                     </select>
                 </div>
                 <div class="footer-row view-row">
@@ -126,9 +128,13 @@
                             <span class="dot-yellow"></span>
                             <span class="dot-green"></span>
                         </div>
-                        <div class="panel-tab active">
+                        <div class="panel-tab active" id="tab-terminal" style="cursor: pointer;">
                             <i class="fa-solid fa-terminal"></i>
-                            <span id="terminal-tab-title">root@PHANTOM-X: ~/hackingtool</span>
+                            <span id="terminal-tab-title">Terminal</span>
+                        </div>
+                        <div class="panel-tab" id="tab-gui" style="cursor: pointer;">
+                            <i class="fa-solid fa-sliders"></i>
+                            <span>GUI Mode</span>
                         </div>
                         <div class="panel-actions">
                             <button class="paction-btn" id="btn-reset-dir" title="Reset to home dir"><i class="fa-solid fa-house"></i></button>
@@ -138,6 +144,58 @@
                     <!-- XTerm container -->
                     <div class="xterm-container" id="xterm-container">
                         <div id="terminal"></div>
+                    </div>
+                    <!-- GUI container -->
+                    <div class="gui-container" id="gui-container" style="display: none;">
+                        <div class="gui-tool-header">
+                            <div class="gui-tool-info">
+                                <span class="gui-cat-label" id="gui-tool-cat">TOOL CATEGORY</span>
+                                <h3 class="gui-tool-name" id="gui-tool-name">Select a Tool</h3>
+                                <p class="gui-tool-desc" id="gui-tool-desc">Click any tool on the right explorer to configure parameters and run it in GUI Mode.</p>
+                            </div>
+                            <div class="gui-tool-status" id="gui-tool-status-wrap">
+                                <span class="badge checking" id="gui-tool-status">Select Tool</span>
+                            </div>
+                        </div>
+
+                        <!-- Warning for uninstalled tools -->
+                        <div class="gui-warning-card" id="gui-warning-card" style="display: none;">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <div class="gui-warning-text">
+                                <strong>Tool Not Installed</strong>
+                                <span>Please install this tool from the details modal or right panel first.</span>
+                            </div>
+                        </div>
+
+                        <!-- Form container -->
+                        <div class="gui-form-wrap" id="gui-form-wrap">
+                            <form id="gui-inputs-form" onsubmit="return false;">
+                                <div class="gui-no-inputs" id="gui-no-inputs">No options to configure. Click Run Security Scan below.</div>
+                            </form>
+                        </div>
+
+                        <!-- Action row -->
+                        <div class="gui-action-row">
+                            <button class="gui-btn primary" id="btn-gui-run" disabled>
+                                <i class="fa-solid fa-play"></i> RUN SECURITY SCAN
+                            </button>
+                            <button class="gui-btn danger" id="btn-gui-stop" disabled>
+                                <i class="fa-solid fa-circle-stop"></i> STOP SCAN
+                            </button>
+                        </div>
+
+                        <!-- Console logs container -->
+                        <div class="gui-console-wrap">
+                            <div class="gui-console-header">
+                                <span class="gui-console-title"><i class="fa-solid fa-code"></i> SCAN LOGS & OUTPUT</span>
+                                <button class="gui-console-clear" id="btn-gui-clear-console" title="Clear Console Output">
+                                    <i class="fa-solid fa-trash-can"></i> Clear
+                                </button>
+                            </div>
+                            <div class="gui-console-body" id="gui-console-body">
+                                <pre class="gui-output-pre" id="gui-output-pre">Welcome to PHANTOM-X GUI Mode scan console. Select a tool, configure parameters, and click Run. Output will stream here in real time...</pre>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -219,6 +277,47 @@
                 <button class="maction-btn" id="btn-uninstall-tool" style="display: none; background: rgba(255, 0, 85, 0.1); border: 1px solid #ff0055; color: #ff0055;">
                     <i class="fa-solid fa-trash-can"></i> Delete
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ GUI INSTALL MODAL ══════════════ -->
+    <div class="modal-overlay" id="gui-install-modal">
+        <div class="modal-card" style="max-width: 500px;">
+            <button class="modal-close" id="btn-close-gui-install-modal"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="modal-top">
+                <div class="modal-icon-wrap" style="color: var(--primary);">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                </div>
+                <div class="modal-title-wrap">
+                    <span class="modal-cat-label">INSTALLATION REQUIRED</span>
+                    <h2 class="modal-tool-title" id="gui-install-tool-name">Tool Name</h2>
+                </div>
+            </div>
+
+            <p class="modal-description" style="margin-top: 10px; font-size: 13px;" id="gui-install-tool-desc">
+                This tool is not installed on your system. To use it in GUI Mode, you need to download and install it first.
+            </p>
+
+            <div id="gui-install-initial-screen">
+                <div class="modal-actions" style="margin-top: 25px; justify-content: flex-end; gap: 10px;">
+                    <button class="maction-btn secondary" id="btn-cancel-gui-install">Cancel</button>
+                    <button class="maction-btn primary" id="btn-start-gui-install">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Download & Install
+                    </button>
+                </div>
+            </div>
+
+            <div id="gui-install-progress-screen" style="display: none; margin-top: 20px;">
+                <div style="font-size: 11px; font-weight: bold; color: var(--primary); margin-bottom: 6px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-spinner fa-spin"></i> INSTALLATION IN PROGRESS...
+                </div>
+                <div class="gui-console-wrap" style="height: 180px; border-radius: var(--radius-sm);">
+                    <div class="gui-console-body" style="padding: 8px; font-size: 10.5px; background: #020104; overflow-y: auto;">
+                        <pre class="gui-output-pre" id="gui-install-console-pre" style="font-size: 10.5px; line-height: 1.4; color: #a3e635; margin: 0;"></pre>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -125,7 +125,7 @@ class HackingTool:
             if cmd.startswith("sudo "):
                 cmd = cmd[5:].strip()
             binary = cmd.split()[0] if cmd else ""
-            if binary and binary not in (".", "echo", "cd"):
+            if binary and binary not in (".", "echo", "cd", "python", "python3", "python2", "bash", "sh", "php", "git", "pip", "pip3", "sudo", "clear", "cat", "sleep", "exit"):
                 if shutil.which(binary):
                     return True
         # Check if git clone target dir exists
