@@ -184,7 +184,16 @@ const GUI_SCHEMAS = {
         inputs: [
             { id: "hashfile", label: "Hash File Path", type: "text", placeholder: "hashes.txt", required: true, suggestion: "hashes.txt", help: "Path to a text file containing the encrypted password hashes you want to crack." },
             { id: "wordlist", label: "Wordlist Path", type: "text", placeholder: "/usr/share/wordlists/rockyou.txt", required: true, suggestion: "/usr/share/wordlists/rockyou.txt", help: "Path to the dictionary text file of common passwords to try (e.g. /usr/share/wordlists/rockyou.txt)." },
-            { id: "mode", label: "Hash Mode (-m)", type: "number", default: 0, suggestion: "0", help: "The number specifying hash format (e.g., 0 for MD5, 100 for SHA-1, 1000 for NTLM, 1800 for sha512crypt)." }
+            { id: "mode", label: "Hash Mode (-m)", type: "text", default: "0", placeholder: "0", options: [
+                { value: "0", label: "0 | MD5" },
+                { value: "100", label: "100 | SHA-1" },
+                { value: "1000", label: "1000 | NTLM (Windows)" },
+                { value: "1400", label: "1400 | SHA-256" },
+                { value: "1700", label: "1700 | SHA-512" },
+                { value: "1800", label: "1800 | sha512crypt" },
+                { value: "10500", label: "10500 | PDF 1.4 - 1.6 (Acrobat 9)" },
+                { value: "22000", label: "22000 | WPA/WPA2 Handshake" }
+            ], required: true, help: "Select a common mode kiva type any custom Hashcat mode number (e.g. 0 for MD5, 10500 for PDF, 22000 for WPA2)." }
         ],
         commandBuilder: (vals) => `hashcat -m ${vals.mode || 0} "${vals.hashfile}" "${vals.wordlist}"`
     },
@@ -1402,6 +1411,19 @@ function renderGuiForm(tool) {
             control.placeholder = input.placeholder || "";
             if (input.default !== undefined) {
                 control.value = input.default;
+            }
+            if (input.options) {
+                const dlId = `dl-${input.id}`;
+                control.setAttribute("list", dlId);
+                const dl = document.createElement("datalist");
+                dl.id = dlId;
+                input.options.forEach(opt => {
+                    const o = document.createElement("option");
+                    o.value = opt.value;
+                    o.textContent = opt.label;
+                    dl.appendChild(o);
+                });
+                group.appendChild(dl);
             }
         }
         
