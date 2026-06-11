@@ -194,6 +194,9 @@ const GUI_SCHEMAS = {
             { id: "mode", label: "Mode", type: "select", options: [
                 { value: "direct_pdf", label: "Extract & Crack PDF directly" },
                 { value: "dob_pdf", label: "Extract & Crack DOB PDF (Super Fast < 1 sec)" },
+                { value: "num_4", label: "Crack 4-Digit PIN (Super Fast < 1 sec)" },
+                { value: "num_6", label: "Crack 6-Digit PIN (Fast < 1 min)" },
+                { value: "alnum_4", label: "Crack 4-Char Alphanumeric (Fast < 1 min)" },
                 { value: "hash_file", label: "Crack pre-extracted Hash File" }
             ], default: "direct_pdf", help: "Choose whether to directly crack a PDF file (extracting its hash automatically) or to crack a pre-existing hash text file." },
             { id: "pdf_path", label: "PDF File Path", type: "text", placeholder: "/root/hackingtool/pan.pdf", default: "/root/hackingtool/pan.pdf", help: "The full path to the password-protected PDF file inside the container." },
@@ -208,6 +211,18 @@ const GUI_SCHEMAS = {
                 let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
                 return `echo "[*] [STEP 1] Generating custom Date of Birth (DOB) wordlist (1940-2025)..." && python3 -c "from datetime import date, timedelta; f=open('/root/hackingtool/dob_list.txt','w'); [f.write((date(1940,1,1)+timedelta(days=i)).strftime('%d%m%Y')+'\\\\n') for i in range((date(2026,1,1)-date(1940,1,1)).days)]; f.close()" && echo "[+] Wordlist compiled successfully: /root/hackingtool/dob_list.txt (~31,400 combinations)" && echo "[*] [STEP 2] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 3] Launching John the Ripper (DOB Mode)..." && john --wordlist=/root/hackingtool/dob_list.txt "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETED! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+            } else if (vals.mode === "num_4") {
+                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
+                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
+                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (4-Digit PIN Mode)..." && john --mask=?d?d?d?d "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+            } else if (vals.mode === "num_6") {
+                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
+                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
+                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (6-Digit PIN Mode)..." && john --mask=?d?d?d?d?d?d "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+            } else if (vals.mode === "alnum_4") {
+                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
+                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
+                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (4-Char Lower Alphanumeric Mode)..." && john -1=?l?d --mask=?1?1?1?1 "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
             } else if (vals.mode === "direct_pdf") {
                 let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
