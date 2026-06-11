@@ -206,10 +206,10 @@ const GUI_SCHEMAS = {
             if (vals.mode === "direct_pdf") {
                 let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `pdf2john "${pdf}" > "${hash}" && john ${wl} ${extra} "${hash}"`;
+                return `pdf2john "${pdf}" > "${hash}" && john ${wl} ${extra} "${hash}" && john --show "${hash}"`;
             } else {
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `john ${wl} ${extra} "${hash}"`;
+                return `john ${wl} ${extra} "${hash}" && john --show "${hash}"`;
             }
         }
     },
