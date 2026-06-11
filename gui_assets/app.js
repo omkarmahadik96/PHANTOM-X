@@ -194,9 +194,8 @@ const GUI_SCHEMAS = {
             { id: "mode", label: "Mode", type: "select", options: [
                 { value: "direct_pdf", label: "Extract & Crack PDF directly" },
                 { value: "dob_pdf", label: "Extract & Crack DOB PDF (Super Fast < 1 sec)" },
-                { value: "num_4", label: "Crack 4-Digit PIN (Super Fast < 1 sec)" },
-                { value: "num_6", label: "Crack 6-Digit PIN (Fast < 1 min)" },
-                { value: "alnum_4", label: "Crack 4-Char Alphanumeric (Mixed Case, ~2 min)" },
+                { value: "auto_num", label: "Auto-Crack Numeric PIN (1-8 Digits, Auto-Length)" },
+                { value: "auto_alnum", label: "Auto-Crack Alphanumeric (1-4 Chars, Auto-Length)" },
                 { value: "hash_file", label: "Crack pre-extracted Hash File" }
             ], default: "direct_pdf", help: "Choose whether to directly crack a PDF file (extracting its hash automatically) or to crack a pre-existing hash text file." },
             { id: "pdf_path", label: "PDF File Path", type: "text", placeholder: "/root/hackingtool/pan.pdf", default: "/root/hackingtool/pan.pdf", help: "The full path to the password-protected PDF file inside the container." },
@@ -211,18 +210,14 @@ const GUI_SCHEMAS = {
                 let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
                 return `echo "[*] [STEP 1] Generating custom Date of Birth (DOB) wordlist (1940-2025)..." && python3 -c "from datetime import date, timedelta; f=open('/root/hackingtool/dob_list.txt','w'); [f.write((date(1940,1,1)+timedelta(days=i)).strftime('%d%m%Y')+'\\\\n') for i in range((date(2026,1,1)-date(1940,1,1)).days)]; f.close()" && echo "[+] Wordlist compiled successfully: /root/hackingtool/dob_list.txt (~31,400 combinations)" && echo "[*] [STEP 2] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 3] Launching John the Ripper (DOB Mode)..." && john --wordlist=/root/hackingtool/dob_list.txt "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETED! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
-            } else if (vals.mode === "num_4") {
+            } else if (vals.mode === "auto_num") {
                 let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (4-Digit PIN Mode)..." && john --mask=?d?d?d?d "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
-            } else if (vals.mode === "num_6") {
+                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (Auto-Numeric PIN 1-8 Digits)..." && john --mask=?d?d?d?d?d?d?d?d --min-len=1 "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+            } else if (vals.mode === "auto_alnum") {
                 let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (6-Digit PIN Mode)..." && john --mask=?d?d?d?d?d?d "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
-            } else if (vals.mode === "alnum_4") {
-                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
-                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (4-Char Mixed-Case Alphanumeric Mode)..." && john -1=?l?u?d --mask=?1?1?1?1 "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (Auto-Alphanumeric 1-4 Chars)..." && john -1=?l?u?d --mask=?1?1?1?1 --min-len=1 "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
             } else if (vals.mode === "direct_pdf") {
                 let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
@@ -1448,14 +1443,11 @@ function renderGuiForm(tool) {
             if (val === "dob_pdf") {
                 extraInput.value = "(Auto: Date of Birth Wordlist)";
                 extraInput.disabled = true;
-            } else if (val === "num_4") {
-                extraInput.value = "--mask=?d?d?d?d";
+            } else if (val === "auto_num") {
+                extraInput.value = "--mask=?d?d?d?d?d?d?d?d --min-len=1";
                 extraInput.disabled = true;
-            } else if (val === "num_6") {
-                extraInput.value = "--mask=?d?d?d?d?d?d";
-                extraInput.disabled = true;
-            } else if (val === "alnum_4") {
-                extraInput.value = "-1=?l?u?d --mask=?1?1?1?1";
+            } else if (val === "auto_alnum") {
+                extraInput.value = "-1=?l?u?d --mask=?1?1?1?1 --min-len=1";
                 extraInput.disabled = true;
             } else {
                 extraInput.value = "--mask=?d?d?d?d?d?d?d?d";
