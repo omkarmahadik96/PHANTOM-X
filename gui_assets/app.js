@@ -192,38 +192,46 @@ const GUI_SCHEMAS = {
         name: "John the Ripper",
         inputs: [
             { id: "mode", label: "Mode", type: "select", options: [
-                { value: "direct_pdf", label: "Extract & Crack PDF directly" },
+                { value: "direct_pdf", label: "Extract & Crack file directly" },
                 { value: "dob_pdf", label: "Extract & Crack DOB PDF (Super Fast < 1 sec)" },
                 { value: "auto_num", label: "Auto-Crack Numeric PIN (1-8 Digits, Auto-Length)" },
                 { value: "auto_alnum", label: "Auto-Crack Alphanumeric (1-6 Chars, Auto-Length)" },
                 { value: "hash_file", label: "Crack pre-extracted Hash File" }
-            ], default: "direct_pdf", help: "Choose whether to directly crack a PDF file (extracting its hash automatically) or to crack a pre-existing hash text file." },
-            { id: "pdf_path", label: "PDF File Path", type: "text", placeholder: "/root/hackingtool/pan.pdf", default: "/root/hackingtool/pan.pdf", help: "The full path to the password-protected PDF file inside the container." },
+            ], default: "direct_pdf", help: "Choose whether to directly crack a file (extracting its hash automatically) or to crack a pre-existing hash text file." },
+            { id: "file_type", label: "File Type", type: "select", options: [
+                { value: "pdf", label: "PDF Document (.pdf)" },
+                { value: "zip", label: "ZIP Archive (.zip)" },
+                { value: "rar", label: "RAR Archive (.rar)" },
+                { value: "office", label: "Office Document (.docx, .xlsx, .pptx)" }
+            ], default: "pdf", help: "Select the format of the target encrypted file to use the correct hash extractor." },
+            { id: "file_path", label: "Target File Path", type: "text", placeholder: "/root/hackingtool/pan.pdf", default: "/root/hackingtool/pan.pdf", help: "The full path to the password-protected file inside the container." },
             { id: "hashfile", label: "Hash File Path", type: "text", placeholder: "/root/hackingtool/pan_hash.txt", default: "/root/hackingtool/pan_hash.txt", help: "The path where the extracted hash file is stored or will be saved." },
             { id: "wordlist", label: "Wordlist Path (Optional)", type: "text", placeholder: "/usr/share/wordlists/rockyou.txt", help: "Optionally specify a custom wordlist file path." },
-            { id: "extra", label: "Extra Arguments (Optional)", type: "text", placeholder: "--mask=?d?d?d?d?d?d?d?d", default: "--mask=?d?d?d?d?d?d?d?d", help: "Custom arguments (e.g. '--mask=?d?d?d?d?d?d?d?d' for 8-digit numeric passwords like dates)." }
+            { id: "extra", label: "Extra Arguments (Optional)", type: "text", placeholder: "--mask=?d?d?d?d?d?d?d?d", default: "--mask=?d?d?d?d?d?d?d?d", help: "Custom arguments (e.g. '--mask=?d?d?d?d?d?d?d?d' for 8-digit numeric passwords)." }
         ],
         commandBuilder: (vals) => {
             let wl = vals.wordlist ? `--wordlist="${vals.wordlist}"` : "";
             let extra = vals.extra || "";
+            let file = vals.file_path || "/root/hackingtool/pan.pdf";
+            let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
+            
+            // Map file types to their respective 2john tools
+            let extractor = "pdf2john";
+            if (vals.file_type === "zip") extractor = "zip2john";
+            else if (vals.file_type === "rar") extractor = "rar2john";
+            else if (vals.file_type === "office") extractor = "office2john";
+            
+            let extractCmd = `${extractor} "${file}" > "${hash}"`;
+            
             if (vals.mode === "dob_pdf") {
-                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
-                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `echo "[*] [STEP 1] Generating custom Date of Birth (DOB) wordlist (1940-2025)..." && python3 -c "from datetime import date, timedelta; f=open('/root/hackingtool/dob_list.txt','w'); [f.write((date(1940,1,1)+timedelta(days=i)).strftime('%d%m%Y')+'\\\\n') for i in range((date(2026,1,1)-date(1940,1,1)).days)]; f.close()" && echo "[+] Wordlist compiled successfully: /root/hackingtool/dob_list.txt (~31,400 combinations)" && echo "[*] [STEP 2] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 3] Launching John the Ripper (DOB Mode)..." && john --wordlist=/root/hackingtool/dob_list.txt "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETED! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+                return `echo "[*] [STEP 1] Generating custom Date of Birth (DOB) wordlist (1940-2025)..." && python3 -c "from datetime import date, timedelta; f=open('/root/hackingtool/dob_list.txt','w'); [f.write((date(1940,1,1)+timedelta(days=i)).strftime('%d%m%Y')+'\\\\n') for i in range((date(2026,1,1)-date(1940,1,1)).days)]; f.close()" && echo "[+] Wordlist compiled successfully: /root/hackingtool/dob_list.txt (~31,400 combinations)" && echo "[*] [STEP 2] Extracting password hash from PDF file..." && pdf2john "${file}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 3] Launching John the Ripper (DOB Mode)..." && john --wordlist=/root/hackingtool/dob_list.txt "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETED! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
             } else if (vals.mode === "auto_num") {
-                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
-                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (Auto-Numeric PIN 1-8 Digits)..." && john --mask=?d?d?d?d?d?d?d?d --min-len=1 "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+                return `echo "[*] [STEP 1] Extracting password hash from target file using ${extractor}..." && ${extractCmd} && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (Auto-Numeric PIN 1-8 Digits)..." && john --mask=?d?d?d?d?d?d?d?d --min-len=1 "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
             } else if (vals.mode === "auto_alnum") {
-                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
-                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (Auto-Alphanumeric 1-6 Chars)..." && john -1=?l?u?d --mask=?1?1?1?1?1?1 --min-len=1 "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+                return `echo "[*] [STEP 1] Extracting password hash from target file using ${extractor}..." && ${extractCmd} && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper (Auto-Alphanumeric 1-6 Chars)..." && john -1=?l?u?d --mask=?1?1?1?1?1?1 --min-len=1 "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
             } else if (vals.mode === "direct_pdf") {
-                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
-                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper..." && john ${wl} ${extra} "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+                return `echo "[*] [STEP 1] Extracting password hash from target file using ${extractor}..." && ${extractCmd} && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper..." && john ${wl} ${extra} "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
             } else {
-                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
                 return `echo "[*] Launching John the Ripper on pre-extracted hash file: ${hash}..." && john ${wl} ${extra} "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
             }
         }
