@@ -193,6 +193,7 @@ const GUI_SCHEMAS = {
         inputs: [
             { id: "mode", label: "Mode", type: "select", options: [
                 { value: "direct_pdf", label: "Extract & Crack PDF directly" },
+                { value: "dob_pdf", label: "Extract & Crack DOB PDF (Super Fast < 1 sec)" },
                 { value: "hash_file", label: "Crack pre-extracted Hash File" }
             ], default: "direct_pdf", help: "Choose whether to directly crack a PDF file (extracting its hash automatically) or to crack a pre-existing hash text file." },
             { id: "pdf_path", label: "PDF File Path", type: "text", placeholder: "/root/hackingtool/pan.pdf", default: "/root/hackingtool/pan.pdf", help: "The full path to the password-protected PDF file inside the container." },
@@ -203,13 +204,17 @@ const GUI_SCHEMAS = {
         commandBuilder: (vals) => {
             let wl = vals.wordlist ? `--wordlist="${vals.wordlist}"` : "";
             let extra = vals.extra || "";
-            if (vals.mode === "direct_pdf") {
+            if (vals.mode === "dob_pdf") {
                 let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `pdf2john "${pdf}" > "${hash}" && john ${wl} ${extra} "${hash}" && john --show "${hash}"`;
+                return `echo "[*] [STEP 1] Generating custom Date of Birth (DOB) wordlist (1940-2025)..." && python3 -c "from datetime import date, timedelta; f=open('/root/hackingtool/dob_list.txt','w'); [f.write((date(1940,1,1)+timedelta(days=i)).strftime('%d%m%Y')+'\\\\n') for i in range((date(2026,1,1)-date(1940,1,1)).days)]; f.close()" && echo "[+] Wordlist compiled successfully: /root/hackingtool/dob_list.txt (~31,400 combinations)" && echo "[*] [STEP 2] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 3] Launching John the Ripper (DOB Mode)..." && john --wordlist=/root/hackingtool/dob_list.txt "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETED! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
+            } else if (vals.mode === "direct_pdf") {
+                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
+                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
+                return `echo "[*] [STEP 1] Extracting password hash from PDF file..." && pdf2john "${pdf}" > "${hash}" && echo "[+] Hash extracted successfully and saved to: ${hash}" && echo "[*] [STEP 2] Launching John the Ripper..." && john ${wl} ${extra} "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
             } else {
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `john ${wl} ${extra} "${hash}" && john --show "${hash}"`;
+                return `echo "[*] Launching John the Ripper on pre-extracted hash file: ${hash}..." && john ${wl} ${extra} "${hash}" && echo "" && echo "================================================" && echo "[+] CRACKING COMPLETE! CRACKED PASSWORD RESULTS:" && echo "================================================" && john --show "${hash}"`;
             }
         }
     },
