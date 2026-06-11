@@ -191,9 +191,25 @@ const GUI_SCHEMAS = {
     "pass_2": {
         name: "John the Ripper",
         inputs: [
-            { id: "hashfile", label: "Hash File Path", type: "text", placeholder: "hashes.txt", required: true, suggestion: "hashes.txt", help: "Path to the text file containing encrypted hashes to crack using John the Ripper." }
+            { id: "mode", label: "Mode", type: "select", options: [
+                { value: "direct_pdf", label: "Extract & Crack PDF directly" },
+                { value: "hash_file", label: "Crack pre-extracted Hash File" }
+            ], default: "direct_pdf", help: "Choose whether to directly crack a PDF file (extracting its hash automatically) or to crack a pre-existing hash text file." },
+            { id: "pdf_path", label: "PDF File Path", type: "text", placeholder: "/root/hackingtool/pan.pdf", default: "/root/hackingtool/pan.pdf", help: "The full path to the password-protected PDF file inside the container." },
+            { id: "hashfile", label: "Hash File Path", type: "text", placeholder: "/root/hackingtool/pan_hash.txt", default: "/root/hackingtool/pan_hash.txt", help: "The path where the extracted hash file is stored or will be saved." },
+            { id: "wordlist", label: "Wordlist Path (Optional)", type: "text", placeholder: "/usr/share/wordlists/rockyou.txt", help: "Optionally specify a custom wordlist file path." }
         ],
-        commandBuilder: (vals) => `john "${vals.hashfile}"`
+        commandBuilder: (vals) => {
+            let wl = vals.wordlist ? `--wordlist="${vals.wordlist}"` : "";
+            if (vals.mode === "direct_pdf") {
+                let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
+                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
+                return `pdf2john "${pdf}" > "${hash}" && john ${wl} "${hash}"`;
+            } else {
+                let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
+                return `john ${wl} "${hash}"`;
+            }
+        }
     },
     "pass_3": {
         name: "CeWL",

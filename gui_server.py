@@ -36,18 +36,35 @@ FALLBACK_REPOS = {
 # ══════════════════════════════════════════════════════════════
 # 1. TOOLS CATALOG
 # ══════════════════════════════════════════════════════════════
-def load_tools_catalog():
-    path = os.path.join(BASE_DIR, 'tools_data.json')
-    if os.path.exists(path):
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return []
-
-tools_catalog = load_tools_catalog()
+_last_catalog_load = 0
+tools_catalog = []
 tools_by_id = {}
-for cat_obj in tools_catalog:
-    for t in cat_obj.get("tools", []):
-        tools_by_id[t["id"]] = {**t, "categoryName": cat_obj["category"]}
+
+def refresh_tools_if_needed():
+    global _last_catalog_load, tools_catalog, tools_by_id
+    path = os.path.join(BASE_DIR, 'tools_data.json')
+    if not os.path.exists(path):
+        tools_catalog = []
+        tools_by_id = {}
+        return
+    try:
+        mtime = os.path.getmtime(path)
+    except Exception:
+        mtime = 0
+    if mtime > _last_catalog_load:
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                tools_catalog = json.load(f)
+            tools_by_id = {}
+            for cat_obj in tools_catalog:
+                for t in cat_obj.get("tools", []):
+                    tools_by_id[t["id"]] = {**t, "categoryName": cat_obj["category"]}
+            _last_catalog_load = mtime
+        except Exception as e:
+            print(f"[ERROR] Failed to load tools_data.json: {e}")
+
+# Initial load
+refresh_tools_if_needed()
 
 # ══════════════════════════════════════════════════════════════
 # 2. HELPER FUNCTIONS
@@ -150,6 +167,7 @@ def is_tool_installed(tool):
     return False
 
 def get_all_installed_statuses():
+    refresh_tools_if_needed()
     return {tid: is_tool_installed(t) for tid, t in tools_by_id.items()}
 
 def get_custom_env():
@@ -578,6 +596,7 @@ def index():
 
 @app.route('/api/tools')
 def api_tools():
+    refresh_tools_if_needed()
     resp = jsonify(tools_catalog)
     resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     return resp
@@ -748,6 +767,7 @@ def make_execution_template(cmd, tool_name):
 
 @socketio.on('run_tool')
 def handle_run_tool(data):
+    refresh_tools_if_needed()
     sid = request.sid
     tool_id = data.get('tool_id')
     tool    = tools_by_id.get(tool_id)
@@ -802,6 +822,7 @@ def handle_run_tool(data):
 
 @socketio.on('install_tool')
 def handle_install_tool(data):
+    refresh_tools_if_needed()
     sid = request.sid
     tool_id = data.get('tool_id')
     tool    = tools_by_id.get(tool_id)
@@ -880,6 +901,7 @@ def handle_install_tool(data):
 
 @socketio.on('uninstall_tool')
 def handle_uninstall_tool(data):
+    refresh_tools_if_needed()
     sid = request.sid
     tool_id = data.get('tool_id')
     tool    = tools_by_id.get(tool_id)
