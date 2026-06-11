@@ -1438,6 +1438,33 @@ function renderGuiForm(tool) {
         
         form.appendChild(group);
     });
+
+    // Automatically update and control extra arguments input box based on selected mode
+    const modeSelect = document.getElementById("gui-input-mode");
+    const extraInput = document.getElementById("gui-input-extra");
+    if (modeSelect && extraInput) {
+        const updateExtraField = () => {
+            const val = modeSelect.value;
+            if (val === "dob_pdf") {
+                extraInput.value = "(Auto: Date of Birth Wordlist)";
+                extraInput.disabled = true;
+            } else if (val === "num_4") {
+                extraInput.value = "--mask=?d?d?d?d";
+                extraInput.disabled = true;
+            } else if (val === "num_6") {
+                extraInput.value = "--mask=?d?d?d?d?d?d";
+                extraInput.disabled = true;
+            } else if (val === "alnum_4") {
+                extraInput.value = "-1=?l?d --mask=?1?1?1?1";
+                extraInput.disabled = true;
+            } else {
+                extraInput.value = "--mask=?d?d?d?d?d?d?d?d";
+                extraInput.disabled = false;
+            }
+        };
+        modeSelect.addEventListener("change", updateExtraField);
+        updateExtraField();
+    }
 }
 
 function syncGuiToolInstallState(isInst) {
