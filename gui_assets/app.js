@@ -197,17 +197,19 @@ const GUI_SCHEMAS = {
             ], default: "direct_pdf", help: "Choose whether to directly crack a PDF file (extracting its hash automatically) or to crack a pre-existing hash text file." },
             { id: "pdf_path", label: "PDF File Path", type: "text", placeholder: "/root/hackingtool/pan.pdf", default: "/root/hackingtool/pan.pdf", help: "The full path to the password-protected PDF file inside the container." },
             { id: "hashfile", label: "Hash File Path", type: "text", placeholder: "/root/hackingtool/pan_hash.txt", default: "/root/hackingtool/pan_hash.txt", help: "The path where the extracted hash file is stored or will be saved." },
-            { id: "wordlist", label: "Wordlist Path (Optional)", type: "text", placeholder: "/usr/share/wordlists/rockyou.txt", help: "Optionally specify a custom wordlist file path." }
+            { id: "wordlist", label: "Wordlist Path (Optional)", type: "text", placeholder: "/usr/share/wordlists/rockyou.txt", help: "Optionally specify a custom wordlist file path." },
+            { id: "extra", label: "Extra Arguments (Optional)", type: "text", placeholder: "--mask=?d?d?d?d?d?d?d?d", default: "--mask=?d?d?d?d?d?d?d?d", help: "Custom arguments (e.g. '--mask=?d?d?d?d?d?d?d?d' for 8-digit numeric passwords like dates)." }
         ],
         commandBuilder: (vals) => {
             let wl = vals.wordlist ? `--wordlist="${vals.wordlist}"` : "";
+            let extra = vals.extra || "";
             if (vals.mode === "direct_pdf") {
                 let pdf = vals.pdf_path || "/root/hackingtool/pan.pdf";
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `pdf2john "${pdf}" > "${hash}" && john ${wl} "${hash}"`;
+                return `pdf2john "${pdf}" > "${hash}" && john ${wl} ${extra} "${hash}"`;
             } else {
                 let hash = vals.hashfile || "/root/hackingtool/pan_hash.txt";
-                return `john ${wl} "${hash}"`;
+                return `john ${wl} ${extra} "${hash}"`;
             }
         }
     },
