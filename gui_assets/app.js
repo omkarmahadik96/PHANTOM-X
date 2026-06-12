@@ -479,8 +479,77 @@ const GUI_SCHEMAS = {
                 return `adb ${targetFlag} ${cmd} ${vals.extra || ''}`;
             }
         }
+    },
+    "linux_1": {
+        name: "Lynis",
+        inputs: [
+            { id: "command", label: "Lynis Command", type: "select", options: [
+                { value: "audit system", label: "Audit System (Complete System Security Audit)" },
+                { value: "show options", label: "Show Commands/Options" }
+            ], default: "audit system", help: "Select the Lynis command to run." },
+            { id: "args", label: "Extra Arguments (Optional)", type: "text", placeholder: "--quick", suggestion: "--quick", help: "Extra arguments (e.g. '--quick' for non-interactive execution)." }
+        ],
+        commandBuilder: (vals) => `lynis ${vals.command || 'audit system'} ${vals.args || ''}`
+    },
+    "cont_1": {
+        name: "kube-bench",
+        inputs: [
+            { id: "command", label: "Kube-bench Command", type: "select", options: [
+                { value: "run", label: "run (Run CIS benchmark tests)" },
+                { value: "run --targets master", label: "run --targets master (Test Kubernetes Master Node)" },
+                { value: "run --targets node", label: "run --targets node (Test Kubernetes Worker Node)" }
+            ], default: "run", help: "Select the Kube-bench test suite to execute." }
+        ],
+        commandBuilder: (vals) => `./kube-bench/kube-bench ${vals.command || 'run'}`
+    },
+    "soc_9": {
+        name: "Autopsy",
+        inputs: [
+            { id: "args", label: "Autopsy Arguments / Command", type: "text", placeholder: "-d /root/hackingtool", suggestion: "-d /root/hackingtool", help: "Enter arguments for Autopsy command line scanner kiva directory to analyse." }
+        ],
+        commandBuilder: (vals) => `autopsy ${vals.args || ''}`
+    },
+    "red_2": {
+        name: "Atomic Red Team",
+        inputs: [
+            { id: "args", label: "Arguments / Command", type: "text", placeholder: "--help", suggestion: "--help", help: "Enter arguments to query kiva run Atomic Red Team tests." }
+        ],
+        commandBuilder: (vals) => `echo 'Atomic Red Team repository cloned under atomic-red-team/'`
     }
 };
+
+// Copy references for duplicate/alias tool IDs to share schemas
+const aliasMappings = {
+    "vuln_1": "web_1",          // Nuclei Templates -> Nuclei
+    "vuln_4": "vuln_3",         // Nikto -> Nikto
+    "cont_2": "kube_2",         // kube-hunter -> kube-hunter
+    "cont_3": "vuln_2",         // Trivy Container -> Trivy
+    "soc_5": "soc_network_1",   // Zeek -> Zeek
+    "soc_6": "soc_network_2",   // Suricata -> Suricata
+    "soc_7": "soc_network_3",   // Snort3 -> Snort3
+    "soc_8": "soc_dfir_1",      // Volatility 3 -> Volatility 3
+    "soc_10": "soc_dfir_3",     // Chainsaw -> Chainsaw
+    "soc_11": "soc_dfir_4",     // Hayabusa -> Hayabusa
+    "soc_14": "soc_threat_3",   // YARA -> YARA
+    "top_1": "scan_1",          // Nmap -> Nmap
+    "top_4": "web_1",           // Nuclei -> Nuclei
+    "top_5": "recon_2",         // Amass -> Amass
+    "top_6": "recon_3",         // Subfinder -> Subfinder
+    "top_7": "web_4",           // ffuf -> ffuf
+    "top_8": "web_7",           // sqlmap -> sqlmap
+    "top_9": "soc_1",           // Wazuh -> Wazuh (Fallback schema)
+    "top_10": "soc_network_2",  // Suricata -> Suricata
+    "top_11": "soc_network_1",  // Zeek -> Zeek
+    "top_12": "soc_dfir_1",     // Volatility3 -> Volatility 3
+    "top_13": "soc_9",          // Autopsy -> Autopsy
+    "top_14": "linux_1",        // Lynis -> Lynis
+    "top_15": "linux_3"         // Falco -> Falco
+};
+for (const [alias, target] of Object.entries(aliasMappings)) {
+    if (GUI_SCHEMAS[target]) {
+        GUI_SCHEMAS[alias] = GUI_SCHEMAS[target];
+    }
+}
 
 const fallbackSchema = {
     inputs: [
