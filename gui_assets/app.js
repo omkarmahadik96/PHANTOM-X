@@ -480,6 +480,99 @@ const GUI_SCHEMAS = {
             }
         }
     },
+    "top_2": {
+        name: "Wireshark",
+        inputs: [
+            { id: "command", label: "Action", type: "select", options: [
+                { value: "wireshark &", label: "Start Wireshark (X11 / Desktop GUI)" },
+                { value: "tshark -D", label: "List Capture Interfaces (tshark -D)" }
+            ], default: "wireshark &", help: "Select the Wireshark option. Note: Launching GUI Wireshark requires an X11 server or desktop environment." }
+        ],
+        commandBuilder: (vals) => `${vals.command || 'wireshark &'}`
+    },
+    "top_3": {
+        name: "Burp Suite",
+        inputs: [
+            { id: "command", label: "Action", type: "select", options: [
+                { value: "echo 'Burp Suite community edition installer downloaded. Run ./burpsuite_community.sh to install.'", label: "Show Installation Guide" },
+                { value: "burpsuite &", label: "Launch Burp Suite Desktop GUI" }
+            ], default: "echo 'Burp Suite community edition installer downloaded. Run ./burpsuite_community.sh to install.'", help: "Select Action for Burp Suite." }
+        ],
+        commandBuilder: (vals) => `${vals.command}`
+    },
+    "soc_1": {
+        name: "Wazuh",
+        inputs: [
+            { id: "action", label: "Operation", type: "select", options: [
+                { value: "echo 'Wazuh manager installation script downloaded. Run curl -sO https://packages.wazuh.com/4.x/wazuh-install.sh && sudo bash wazuh-install.sh --help to configure.'", label: "Show Wazuh Installation Guidelines" },
+                { value: "systemctl status wazuh-manager", label: "Check Wazuh Manager Status" }
+            ], default: "echo 'Wazuh manager installation script downloaded. Run curl -sO https://packages.wazuh.com/4.x/wazuh-install.sh && sudo bash wazuh-install.sh --help to configure.'", help: "Select Wazuh command." }
+        ],
+        commandBuilder: (vals) => `${vals.action}`
+    },
+    "soc_2": {
+        name: "Security Onion",
+        inputs: [
+            { id: "action", label: "Operation", type: "select", options: [
+                { value: "echo 'Visit Security Onion documentation at https://docs.securityonion.net/ for direct server installation details.'", label: "Show Documentation Link" }
+            ], default: "echo 'Visit Security Onion documentation at https://docs.securityonion.net/ for direct server installation details.'", help: "Security Onion installation info." }
+        ],
+        commandBuilder: (vals) => `${vals.action}`
+    },
+    "soc_3": {
+        name: "ELK Stack",
+        inputs: [
+            { id: "action", label: "Operation", type: "select", options: [
+                { value: "echo 'Elasticsearch, Logstash, Kibana log pipeline installation and orchestration guide.'", label: "Show ELK Stack Information" }
+            ], default: "echo 'Elasticsearch, Logstash, Kibana log pipeline installation and orchestration guide.'", help: "ELK Stack details." }
+        ],
+        commandBuilder: (vals) => `${vals.action}`
+    },
+    "soc_4": {
+        name: "Graylog",
+        inputs: [
+            { id: "action", label: "Operation", type: "select", options: [
+                { value: "echo 'Graylog requires MongoDB and OpenSearch. See setup guide: https://go2graylog.org/graylog-install'", label: "Show Installation Guidelines" }
+            ], default: "echo 'Graylog requires MongoDB and OpenSearch. See setup guide: https://go2graylog.org/graylog-install'", help: "Graylog info." }
+        ],
+        commandBuilder: (vals) => `${vals.action}`
+    },
+    "soc_12": {
+        name: "MISP",
+        inputs: [
+            { id: "action", label: "Operation", type: "select", options: [
+                { value: "echo 'MISP is best run via docker-compose: git clone https://github.com/MISP/misp-docker.git'", label: "Show Docker Deployment Guide" }
+            ], default: "echo 'MISP is best run via docker-compose: git clone https://github.com/MISP/misp-docker.git'", help: "MISP info." }
+        ],
+        commandBuilder: (vals) => `${vals.action}`
+    },
+    "soc_13": {
+        name: "OpenCTI",
+        inputs: [
+            { id: "action", label: "Operation", type: "select", options: [
+                { value: "echo 'OpenCTI is recommended to run via docker-compose: https://github.com/OpenCTI-Platform/docker.git'", label: "Show Docker Deployment Guide" }
+            ], default: "echo 'OpenCTI is recommended to run via docker-compose: https://github.com/OpenCTI-Platform/docker.git'", help: "OpenCTI info." }
+        ],
+        commandBuilder: (vals) => `${vals.action}`
+    },
+    "red_1": {
+        name: "MITRE Caldera",
+        inputs: [
+            { id: "action", label: "Operation", type: "select", options: [
+                { value: "echo 'MITRE Caldera server setup guide: git clone https://github.com/mitre/caldera.git && cd caldera && pip3 install -r requirements.txt'", label: "Show Setup Guide" }
+            ], default: "echo 'MITRE Caldera server setup guide: git clone https://github.com/mitre/caldera.git && cd caldera && pip3 install -r requirements.txt'", help: "Caldera info." }
+        ],
+        commandBuilder: (vals) => `${vals.action}`
+    },
+    "red_3": {
+        name: "Prelude Operator",
+        inputs: [
+            { id: "action", label: "Operation", type: "select", options: [
+                { value: "echo 'Prelude Operator is a desktop client application. Download link: https://www.prelude.org/'", label: "Show Download Link" }
+            ], default: "echo 'Prelude Operator is a desktop client application. Download link: https://www.prelude.org/'", help: "Prelude Operator info." }
+        ],
+        commandBuilder: (vals) => `${vals.action}`
+    },
     "linux_1": {
         name: "Lynis",
         inputs: [
